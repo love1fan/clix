@@ -2,27 +2,106 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>NOTICE | CLIX</title>
+    <title>CLIX CLAN | NOTICE MANAGER</title>
     <style>
-        body { background: #0a0a0a; color: #fff; font-family: 'Inter', sans-serif; padding: 50px 8%; }
+        body { background: #0a0a0a; color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 50px 8%; }
         .header { border-bottom: 2px solid #ff5e00; padding-bottom: 20px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center; }
         h1 { color: #ff5e00; letter-spacing: 5px; margin: 0; }
-        .back-btn { color: #888; text-decoration: none; font-weight: 800; border: 1px solid #333; padding: 10px 20px; }
-        .info { background: #111; padding: 15px; border-left: 5px solid #ff5e00; margin-bottom: 30px; font-size: 0.9rem; color: #aaa; }
+        .back-btn { color: #888; text-decoration: none; font-weight: 800; border: 1px solid #333; padding: 10px 20px; transition: 0.3s; }
+        
+        /* 글쓰기 양식 */
+        .admin-section { background: #111; border: 1px solid #ff5e00; padding: 25px; margin-bottom: 40px; border-radius: 8px; }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 15px; background: #222; border: 1px solid #333; color: #fff; box-sizing: border-box; font-size: 1rem; }
+        .btn-save { background: #ff5e00; color: #fff; padding: 12px 30px; border: none; font-weight: 800; cursor: pointer; width: 100%; }
+        
+        /* 공지 리스트 */
+        .notice-card { background: #161616; border-left: 5px solid #ff5e00; padding: 25px; margin-bottom: 20px; position: relative; }
+        .tag { background: #ff5e00; color: #fff; padding: 3px 10px; font-size: 0.8rem; font-weight: 800; margin-right: 10px; }
+        .date { color: #555; float: right; }
+        .content { margin-top: 15px; color: #aaa; line-height: 1.6; white-space: pre-wrap; }
+        .btn-del { color: #ff3333; cursor: pointer; font-size: 0.8rem; margin-top: 15px; display: inline-block; border: 1px solid #333; padding: 5px 10px; }
     </style>
 </head>
 <body>
-    <div class="header"><h1>NOTICE</h1><a href="index.html" class="back-btn">HOME</a></div>
-    <div class="info">📢 아래 댓글창에 클랜장님이 작성하는 글이 공식 공지가 됩니다.</div>
-    <div id="disqus_thread"></div>
+    <div class="header">
+        <h1>CLIX NOTICE</h1>
+        <a href="index.html" class="back-btn">BACK TO HOME</a>
+    </div>
+
+    <div class="admin-section">
+        <h3 style="margin-top:0; color:#ff5e00;">새 공지사항 작성</h3>
+        <input type="text" id="title" placeholder="제목을 입력하세요 (예: 4월 패치노트 요약)">
+        <input type="text" id="tag" placeholder="태그 (예: [공지], [필독])">
+        <textarea id="content" rows="5" placeholder="내용을 입력하세요"></textarea>
+        <button class="btn-save" onclick="saveNotice()">홈페이지에 즉시 게시하기</button>
+    </div>
+
+    <div id="notice-list">
+        </div>
+
     <script>
-        var disqus_config = function () { this.page.url = window.location.href; this.page.identifier = 'clix_notice_new'; };
-        (function() { 
-            var d = document, s = d.createElement('script');
-            s.src = 'https://clix-clan.disqus.com/embed.js';
-            s.setAttribute('data-timestamp', +new Date());
-            (d.head || d.body).appendChild(s);
-        })();
+        // 페이지가 열릴 때 저장된 글을 불러옴
+        window.onload = function() {
+            displayNotices();
+        };
+
+        // 글 저장 함수
+        function saveNotice() {
+            const title = document.getElementById('title').value;
+            const tag = document.getElementById('tag').value || '[일반]';
+            const content = document.getElementById('content').value;
+            const date = new Date().toLocaleDateString();
+
+            if (!title || !content) {
+                alert("제목과 내용을 모두 적어주세요!");
+                return;
+            }
+
+            const newNotice = { title, tag, content, date };
+            
+            // 기존 데이터 가져오기
+            let notices = JSON.parse(localStorage.getItem('clix_notices')) || [];
+            notices.unshift(newNotice); // 새 글을 맨 위로
+            
+            // 저장
+            localStorage.setItem('clix_notices', JSON.stringify(notices));
+            
+            // 화면 갱신 및 입력창 비우기
+            document.getElementById('title').value = '';
+            document.getElementById('content').value = '';
+            displayNotices();
+            alert("게시되었습니다!");
+        }
+
+        // 화면에 글 목록 표시
+        function displayNotices() {
+            const notices = JSON.parse(localStorage.getItem('clix_notices')) || [];
+            const list = document.getElementById('notice-list');
+            let html = '';
+
+            notices.forEach((n, index) => {
+                html += `
+                    <div class="notice-card">
+                        <span class="tag">${n.tag}</span> <strong>${n.title}</strong>
+                        <span class="date">${n.date}</span>
+                        <div class="content">${n.content}</div>
+                        <div class="btn-del" onclick="deleteNotice(${index})">이 공지 삭제</div>
+                    </div>
+                `;
+            });
+
+            list.innerHTML = html || '<p style="text-align:center; color:#444;">등록된 공지가 없습니다.</p>';
+        }
+
+        // 글 삭제 함수
+        function deleteNotice(index) {
+            if(confirm("정말 이 공지를 삭제할까요?")) {
+                let notices = JSON.parse(localStorage.getItem('clix_notices')) || [];
+                notices.splice(index, 1);
+                localStorage.setItem('clix_notices', JSON.stringify(notices));
+                displayNotices();
+            }
+        }
     </script>
 </body>
 </html>
