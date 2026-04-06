@@ -9,10 +9,10 @@
         h1 { color: #ff5e00; letter-spacing: 5px; margin: 0; }
         .back-btn { color: #888; text-decoration: none; font-weight: 800; border: 1px solid #333; padding: 10px 20px; transition: 0.3s; }
         .back-btn:hover { background: #ff5e00; color: #fff; }
-        .notice-card { background: #111; border: 1px solid #222; padding: 30px; margin-bottom: 20px; }
-        .tag { background: #ff5e00; color: #fff; padding: 3px 10px; font-size: 0.7rem; font-weight: 800; margin-right: 15px; }
-        .date { color: #444; float: right; }
-        .content { margin-top: 15px; color: #aaa; line-height: 1.6; }
+        .notice-card { background: #111; border: 1px solid #222; padding: 30px; margin-bottom: 20px; border-left: 5px solid #ff5e00; }
+        .tag { background: #ff5e00; color: #fff; padding: 4px 12px; font-size: 0.75rem; font-weight: 800; border-radius: 3px; margin-right: 15px; text-transform: uppercase; }
+        .date { color: #555; float: right; font-weight: 600; }
+        .content { margin-top: 15px; color: #ccc; line-height: 1.8; white-space: pre-wrap; }
     </style>
 </head>
 <body>
@@ -26,36 +26,50 @@
     </div>
 
     <script>
-        // 본인의 구글 스프레드시트 ID를 아래 따옴표 안에 입력하십시오.
+        // ⚠️ 주의: 시트 ID에 https://... 주소를 다 넣지 마시고 고유 ID(문자열)만 넣으세요.
         const sheetId = '11iF6vZJag6R8CC0VzRqezK0HzK7GbMtqRBEmSsIfGec'; 
         const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json`;
 
         fetch(url)
             .then(res => res.text())
             .then(text => {
-                const json = JSON.parse(text.substr(47).slice(0, -2));
+                // 구글 응답 데이터에서 필요한 JSON 부분만 추출
+                const jsonText = text.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\)/);
+                if (!jsonText) throw new Error('데이터 형식이 올바르지 않습니다.');
+                
+                const json = JSON.parse(jsonText[1]);
                 const rows = json.table.rows;
                 let html = '';
                 
-                rows.forEach(row => {
-                    if(row.c[0] != null) {
-                        const tag = row.c[0]?.v || '';
-                        const title = row.c[1]?.v || '';
-                        const date = row.c[2]?.v || '';
-                        const content = row.c[3]?.v || '';
+                if (rows.length === 0 || (rows.length === 1 && !rows[0].c[0])) {
+                    html = '<p style="text-align:center; color:#444;">등록된 공지사항이 없습니다.</p>';
+                } else {
+                    // 첫 줄(헤더)을 제외하고 2행부터 가져오려면 i = 1 로 설정
+                    // 만약 1행부터 바로 데이터라면 i = 0 으로 수정하세요.
+                    for (let i = 1; i < rows.length; i++) {
+                        const row = rows[i].c;
+                        if (!row || !row[1]) continue; // 제목이 없으면 건너뜀
+
+                        const tag = row[0] ? row[0].v : '공지';
+                        const title = row[1] ? row[1].v : '제목 없음';
+                        const date = row[2] ? row[2].v : '-';
+                        const content = row[3] ? row[3].v : '';
                         
                         html += `
                         <div class="notice-card">
-                            <span class="tag">${tag}</span> <span style="font-size: 1.2rem; font-weight: 800;">${title}</span>
+                            <span class="tag">${tag}</span> 
+                            <span style="font-size: 1.25rem; font-weight: 800;">${title}</span>
                             <span class="date">${date}</span>
                             <p class="content">${content}</p>
                         </div>`;
                     }
-                });
-                document.getElementById('notice-container').innerHTML = html;
+                }
+                document.getElementById('notice-container').innerHTML = html || '<p style="text-align:center; color:#444;">표시할 데이터가 없습니다.</p>';
             })
             .catch(error => {
-                document.getElementById('notice-container').innerHTML = '<p style="color:red; text-align:center;">데이터를 불러오는 데 실패했습니다.</p>';
+                console.error(error);
+                document.getElementById('notice-container').innerHTML = 
+                    `<p style="color:#ff5e00; text-align:center;">오류 발생: 시트 ID나 공유 설정을 확인해주세요.<br><small>${error.message}</small></p>`;
             });
     </script>
 </body>
