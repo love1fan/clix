@@ -16,43 +16,34 @@
             -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
         }
 
-        /* 네비게이션바 */
         nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; background: rgba(0,0,0,0.95) !important; position: fixed; width: 100%; top: 0; left: 0; box-sizing: border-box; z-index: 100; border-bottom: 1px solid #222; }
         nav .logo { font-weight: 900; font-size: 26px; color: #ff5e00 !important; text-decoration: none; text-transform: uppercase; letter-spacing: 2px; }
         nav ul { list-style: none; display: flex; margin: 0; padding: 0; align-items: center; }
         nav ul li a { margin-left: 20px; font-size: 12px; color: #999; text-decoration: none; text-transform: uppercase; font-weight: 600; }
-        nav ul li a:hover { color: #ff5e00; }
-
-        /* 헤더 섹션 */
+        
         .header { border-bottom: 2px solid #ff5e00; padding-bottom: 20px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; }
         h1 { color: #ff5e00; letter-spacing: 3px; margin: 0; font-size: 2.5rem; text-transform: uppercase; font-weight: 900; }
-        .back-btn { color: #888; text-decoration: none; border: 1px solid #333; padding: 8px 20px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; transition: 0.3s; }
-        .back-btn:hover { background: #ff5e00; color: #fff; border-color: #ff5e00; }
 
-        /* 글쓰기 구역 */
-        .write-section { border: 1px solid #222; padding: 30px; margin-bottom: 50px; border-radius: 8px; background: #111; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .write-header { display: flex; gap: 15px; margin-bottom: 15px; }
-        input { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 4px; font-family: inherit; }
+        /* 글쓰기 구역 (기본적으로 숨김) */
+        #write-section { display: none; border: 1px solid #222; padding: 30px; margin-bottom: 50px; border-radius: 8px; background: #111; }
+        .user-info-display { color: #ff5e00; font-weight: 800; margin-bottom: 10px; font-size: 0.9rem; }
         textarea { width: 100%; padding: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 4px; box-sizing: border-box; font-family: inherit; resize: none; margin-bottom: 15px; }
-        .btn-post { background: #ff5e00; color: #fff; padding: 15px; border: none; font-weight: 900; cursor: pointer; width: 100%; text-transform: uppercase; border-radius: 4px; transition: 0.3s; letter-spacing: 1px; }
-        .btn-post:hover { background: #e05200; }
+        .btn-post { background: #ff5e00; color: #fff; padding: 15px; border: none; font-weight: 900; cursor: pointer; width: 100%; text-transform: uppercase; border-radius: 4px; transition: 0.3s; }
 
-        /* 게시글 카드 */
-        .post-card { background: #111; border: 1px solid #222; border-radius: 12px; padding: 30px; margin-bottom: 25px; position: relative; transition: 0.3s; }
-        .post-card:hover { border-color: #444; }
+        /* 비회원 안내 문구 */
+        #login-notice { border: 1px dashed #333; padding: 30px; text-align: center; margin-bottom: 50px; border-radius: 8px; color: #666; }
+        #login-notice a { color: #ff5e00; text-decoration: underline; }
+
+        .post-card { background: #111; border: 1px solid #222; border-radius: 12px; padding: 30px; margin-bottom: 25px; position: relative; }
         .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #222; }
-        .post-author { color: #ff5e00; font-weight: 800; font-size: 1.1rem; }
-        .post-date { color: #555; font-size: 0.8rem; font-weight: 600; }
-        .post-content { color: #ddd; white-space: pre-wrap; font-size: 1.05rem; line-height: 1.8; }
+        .post-author { color: #ff5e00; font-weight: 800; }
+        .post-date { color: #555; font-size: 0.8rem; }
+        .post-content { color: #ddd; white-space: pre-wrap; font-size: 1.05rem; }
         
-        /* 삭제 버튼 (관리자 전용) */
-        .btn-del { color: #ff3333; cursor: pointer; font-size: 0.75rem; position: absolute; bottom: 30px; right: 30px; display: none; font-weight: bold; text-decoration: none; border: 1px solid #442222; padding: 5px 10px; border-radius: 4px; }
-        .btn-del:hover { background: #ff3333; color: #fff; }
-        
-        #admin-trigger { position: fixed; bottom: 20px; left: 20px; width: 20px; height: 20px; opacity: 0.05; cursor: pointer; z-index: 999; }
+        .btn-del { color: #ff3333; cursor: pointer; font-size: 0.75rem; position: absolute; bottom: 30px; right: 30px; display: none; font-weight: bold; border: 1px solid #442222; padding: 5px 10px; border-radius: 4px; }
     </style>
 </head>
-<body oncontextmenu="return false">
+<body>
 
     <nav>
         <a href="index.html" class="logo">CLAN CLIX</a>
@@ -66,25 +57,24 @@
 
     <div class="header">
         <h1>BOARD</h1>
-        <a href="index.html" class="back-btn">HOME</a>
+        <div id="user-status" style="font-size: 0.8rem; color: #888;"></div>
     </div>
 
-    <div class="write-section">
-        <div class="write-header">
-            <input type="text" id="nickname" placeholder="닉네임" style="width: 200px;">
-        </div>
-        <textarea id="post-content" rows="4" placeholder="클랜원들과 자유롭게 소통하세요. 비방 및 욕설은 제재 대상입니다."></textarea>
+    <div id="write-section">
+        <div class="user-info-display" id="display-nick">불러오는 중...</div>
+        <textarea id="post-content" rows="4" placeholder="클랜원들과 자유롭게 소통하세요."></textarea>
         <button class="btn-post" onclick="savePost()">POST MESSAGE</button>
+    </div>
+
+    <div id="login-notice">
+        게시글은 회원만 작성할 수 있습니다. <a href="index.html">로그인 하러가기</a>
     </div>
 
     <div id="board-container">
         <p style="text-align:center; color:#444; padding: 50px;">LOADING POSTS...</p>
     </div>
 
-    <div id="admin-trigger" onclick="authAdmin()"></div>
-
     <script>
-        // index.html과 동일한 정확한 설정값 적용
         const firebaseConfig = {
             apiKey: "AIzaSyAFSAu2aynX6YPiJEatWy9IQgWgUuTx8ds",
             authDomain: "korclix.firebaseapp.com",
@@ -95,85 +85,74 @@
         };
 
         firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // 페이지 로드 시 실행
-        window.onload = function() {
-            loadPosts();
-        };
+        let currentUserNickname = "";
 
-        // 관리자 인증 (비밀번호: 1541)
-        function authAdmin() {
-            if(prompt("관리자 코드를 입력하세요.") === "1541") {
-                sessionStorage.setItem('clix_master', 'true');
-                alert("관리자 모드 활성화");
-                location.reload();
+        // 로그인 상태 감시
+        auth.onAuthStateChanged((user) => {
+            const writeSection = document.getElementById('write-section');
+            const loginNotice = document.getElementById('login-notice');
+            
+            if (user && user.emailVerified) {
+                // 로그인 완료 & 인증 완료 시 글쓰기 폼 노출
+                writeSection.style.display = 'block';
+                loginNotice.style.display = 'none';
+                
+                // DB에서 닉네임 가져오기
+                db.collection("users").doc(user.uid).get().then((doc) => {
+                    currentUserNickname = doc.exists ? doc.data().nickname : user.email.split('@')[0];
+                    document.getElementById('display-nick').innerText = "작성자: " + currentUserNickname;
+                });
+            } else {
+                // 비회원 또는 미인증 시 폼 숨김
+                writeSection.style.display = 'none';
+                loginNotice.style.display = 'block';
             }
-        }
+            loadPosts();
+        });
 
-        // 게시글 불러오기 (실시간 수신 대기)
         function loadPosts() {
             db.collection("board").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
                 const container = document.getElementById('board-container');
                 container.innerHTML = "";
                 
-                if (querySnapshot.empty) {
-                    container.innerHTML = `<p style="text-align:center; color:#444; padding: 50px;">등록된 게시글이 없습니다.</p>`;
-                    return;
-                }
-
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
                     const date = data.timestamp ? data.timestamp.toDate().toLocaleString('ko-KR') : '방금 전';
                     const isAdmin = sessionStorage.getItem('clix_master') === 'true';
-                    const adminDisplay = isAdmin ? 'block' : 'none';
 
                     container.innerHTML += `
                         <div class="post-card">
                             <div class="post-header">
-                                <span class="post-author">${data.nickname || '익명'}</span>
+                                <span class="post-author">${data.nickname}</span>
                                 <span class="post-date">${date}</span>
                             </div>
                             <div class="post-content">${data.content}</div>
-                            <button class="btn-del" style="display:${adminDisplay}" onclick="deletePost('${doc.id}')">DELETE</button>
+                            <button class="btn-del" style="display:${isAdmin ? 'block' : 'none'}" onclick="deletePost('${doc.id}')">DELETE</button>
                         </div>
                     `;
                 });
             });
         }
 
-        // 게시글 저장
         function savePost() {
-            const nick = document.getElementById('nickname').value.trim() || "익명";
             const cont = document.getElementById('post-content').value.trim();
-
-            if(!cont) { 
-                return alert("내용을 입력해 주세요."); 
-            }
-
-            if(cont.length > 500) {
-                return alert("글자 수는 500자 이내로 제한됩니다.");
-            }
+            if(!cont) return alert("내용을 입력하세요.");
 
             db.collection("board").add({
-                nickname: nick,
+                nickname: currentUserNickname, // 로그인한 유저의 닉네임 자동 할당
                 content: cont,
+                uid: auth.currentUser.uid,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
                 document.getElementById('post-content').value = "";
-                // 스크롤 상단 이동은 실시간 리스너가 처리함
-            }).catch(err => {
-                alert("등록 실패: " + err.message);
-            });
+            }).catch(err => alert("오류: " + err.message));
         }
 
-        // 게시글 삭제
         function deletePost(id) {
-            if(confirm("이 게시글을 정말 삭제하시겠습니까?")) {
-                db.collection("board").doc(id).delete()
-                .then(() => alert("삭제되었습니다."))
-                .catch(err => alert("삭제 실패: " + err.message));
-            }
+            if(confirm("삭제하시겠습니까?")) db.collection("board").doc(id).delete();
         }
     </script>
 </body>
