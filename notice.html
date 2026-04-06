@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CLIX NOTICE</title>
     <style>
-        /* 1. 복사 방지 및 기본 스타일 */
+        /* 1. 복사 방지 설정 (드래그 및 선택 금지) */
         body { 
             margin: 0; padding: 50px 8%; background-color: #0a0a0a; color: #ffffff; 
             font-family: 'Inter', sans-serif; line-height: 1.6;
@@ -21,28 +21,30 @@
         nav .logo { 
             font-weight: 900; font-size: 26px; color: #ff5e00 !important; text-decoration: none !important;
             background: none !important; background-color: transparent !important; padding: 0 !important;
+            border: none !important; box-shadow: none !important;
         }
         nav ul { list-style: none; display: flex; margin: 0; padding: 0; background: none !important; }
-        nav ul li a { margin-left: 20px; font-size: 12px; color: #999 !important; text-decoration: none !important; text-transform: uppercase; background: none !important; }
+        nav ul li a { 
+            margin-left: 20px; font-size: 12px; color: #999 !important; text-decoration: none !important; 
+            text-transform: uppercase; background: none !important; background-color: transparent !important;
+        }
+        nav ul li a:hover { color: #ff5e00 !important; }
 
-        /* 3. 헤더 및 작성 박스 (이미지 주신 디자인 적용) */
+        /* 3. 헤더 디자인 (주황색 포인트) */
         .header { border-bottom: 2px solid #ff5e00; padding-bottom: 20px; margin-top: 80px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center; }
-        h1 { color: #ff5e00; letter-spacing: 2px; margin: 0; font-size: 1.8rem; }
-        .back-btn { color: #888; text-decoration: none; border: 1px solid #333; padding: 8px 18px; font-size: 0.8rem; font-weight: bold; }
+        h1 { color: #ff5e00; letter-spacing: 2px; margin: 0; font-size: 1.8rem; text-transform: uppercase; }
+        .back-btn { color: #888; text-decoration: none; border: 1px solid #333; padding: 8px 18px; font-size: 0.8rem; font-weight: bold; border-radius: 4px; }
 
-        #admin-editor { display: none; border: 2px solid #ff5e00; padding: 25px; margin-bottom: 40px; border-radius: 4px; background: #111; }
-        .editor-title { color: #ff5e00; font-weight: bold; margin-bottom: 15px; display: block; }
-        input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; background: #1a1a1a; border: 1px solid #333; color: #fff; box-sizing: border-box; }
-        .btn-save { background: #ff5e00; color: #fff; padding: 12px; border: none; font-weight: bold; cursor: pointer; width: 100%; text-transform: uppercase; }
+        /* 4. 안내 문구 박스 */
+        .info-box { 
+            background: #111; border: 2px solid #ff5e00; padding: 20px; margin-bottom: 40px; 
+            border-radius: 4px; color: #aaa; font-size: 0.9rem; 
+        }
 
-        /* 4. 공지사항 리스트 스타일 */
-        .notice-card { background: #111; border-left: 5px solid #ff5e00; padding: 25px; margin-bottom: 20px; position: relative; }
-        .tag { background: #ff5e00; color: #fff; padding: 2px 8px; font-size: 0.7rem; font-weight: bold; margin-right: 10px; vertical-align: middle; }
-        .date { color: #444; float: right; font-size: 0.8rem; }
-        .content { margin-top: 15px; color: #aaa; white-space: pre-wrap; }
-        .btn-del { color: #ff3333; cursor: pointer; font-size: 0.75rem; margin-top: 15px; display: none; text-decoration: underline; }
-        
-        #admin-login-btn { position: fixed; bottom: 10px; right: 10px; font-size: 10px; color: #111; cursor: pointer; }
+        /* 5. Disqus 영역 디자인 */
+        #disqus_thread { 
+            background: #111; padding: 30px; border-radius: 8px; border: 1px solid #222; min-height: 400px;
+        }
     </style>
 </head>
 <body oncontextmenu="return false" onselectstart="return false">
@@ -61,75 +63,25 @@
         <a href="index.html" class="back-btn">BACK TO HOME</a>
     </div>
 
-    <div id="admin-editor">
-        <span class="editor-title">새 공지사항 작성</span>
-        <input type="text" id="title" placeholder="제목을 입력하세요 (예: 4월 패치노트 요약)">
-        <input type="text" id="tag" placeholder="태그 (예: [공지], [필독])">
-        <textarea id="content" rows="6" placeholder="내용을 입력하세요"></textarea>
-        <button class="btn-save" onclick="saveNotice()">홈페이지에 즉시 게시하기</button>
+    <div class="info-box">
+        📢 <strong style="color:#ff5e00;">필독 공지사항:</strong> 클랜 공식 소식입니다. 중요 내용은 상단 고정되어 있습니다. (복사 및 우클릭 금지)
     </div>
 
-    <div id="notice-list">
-        </div>
-
-    <div id="admin-login-btn" onclick="authAdmin()">ADMIN</div>
+    <div id="disqus_thread"></div>
 
     <script>
-        window.onload = function() {
-            renderNotices();
-            if(sessionStorage.getItem('clix_master') === 'true') showAdminUI();
+        var disqus_config = function () {
+            this.page.url = window.location.href;  
+            this.page.identifier = 'clix_notice_shared_v7'; // 보드와 겹치지 않는 고유 ID
         };
 
-        function authAdmin() {
-            if(prompt("관리자 코드를 입력하세요") === "1541") {
-                sessionStorage.setItem('clix_master', 'true');
-                showAdminUI();
-                alert("관리자 모드 활성화");
-            }
-        }
-
-        function showAdminUI() {
-            document.getElementById('admin-editor').style.display = 'block';
-            document.querySelectorAll('.btn-del').forEach(b => b.style.display = 'block');
-        }
-
-        function saveNotice() {
-            const t = document.getElementById('title').value;
-            const g = document.getElementById('tag').value || '[공지]';
-            const c = document.getElementById('content').value;
-            if(!t || !c) return alert("내용을 채워주세요");
-
-            let list = JSON.parse(localStorage.getItem('clix_db') || '[]');
-            list.unshift({ title: t, tag: g, content: c, date: new Date().toLocaleDateString() });
-            localStorage.setItem('clix_db', JSON.stringify(list));
-            location.reload();
-        }
-
-        function renderNotices() {
-            const list = JSON.parse(localStorage.getItem('clix_db') || '[]');
-            const container = document.getElementById('notice-list');
-            if(list.length === 0) {
-                container.innerHTML = '<p style="text-align:center; color:#333; margin-top:50px;">등록된 공지가 없습니다.</p>';
-                return;
-            }
-            container.innerHTML = list.map((n, i) => `
-                <div class="notice-card">
-                    <span class="date">${n.date}</span>
-                    <span class="tag">${n.tag}</span><strong>${n.title}</strong>
-                    <div class="content">${n.content}</div>
-                    <div class="btn-del" onclick="deleteNotice(${i})">삭제하기</div>
-                </div>
-            `).join('');
-        }
-
-        function deleteNotice(i) {
-            if(confirm("삭제하시겠습니까?")) {
-                let list = JSON.parse(localStorage.getItem('clix_db') || '[]');
-                list.splice(i, 1);
-                localStorage.setItem('clix_db', JSON.stringify(list));
-                renderNotices();
-            }
-        }
+        (function() { 
+            var d = document, s = d.createElement('script');
+            // ⚠️ 'clix-clan'이 본인 숏네임인지 확인!
+            s.src = 'https://clix-clan.disqus.com/embed.js'; 
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
     </script>
 </body>
 </html>
