@@ -52,7 +52,7 @@
         .map-image-wrapper { width: 100%; background: #000; border: 2px solid #333; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .map-image-wrapper img { width: 100%; height: auto; display: block; object-fit: cover; }
 
-        /* 🔥 MEMBERS STATS 디자인 강화 (디테일형) */
+        /* 🔥 MEMBERS STATS 디테일 대시보드 */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-top: 50px; }
         .stat-card { background: rgba(17, 17, 17, 0.9); border: 1px solid #222; border-radius: 12px; padding: 35px; transition: 0.3s; position: relative; overflow: hidden; }
         .stat-card:hover { border-color: #ff5e00; transform: translateY(-5px); box-shadow: 0 10px 30px rgba(255, 94, 0, 0.1); }
@@ -193,33 +193,8 @@
             </div>
         </div>
         <div style="margin-top:50px; text-align:center;">
-            <a href="https://pubg.op.gg" target="_blank" style="color:#ff5e00; text-decoration:none; margin-right:20px; font-weight:800; border: 1px solid #ff5e00; padding: 10px 20px;">PUBG.OP.GG 바로가기</a>
+            <a href="https://pubg.op.gg" target="_blank" style="color:#ff5e00; text-decoration:none; font-weight:800; border: 1px solid #ff5e00; padding: 10px 20px; border-radius: 4px;">PUBG.OP.GG 바로가기</a>
         </div>
-    </section>
-
-    <section class="section" id="join">
-        <h2 class="section-title">RECRUITMENT</h2>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
-            <div style="background:#111; padding:40px; border-radius:12px; border-left: 5px solid #ff5e00;">
-                <h3 style="color:#ff5e00; margin-bottom: 25px;">가입 조건</h3>
-                <ul style="list-style:none; padding:0; line-height: 2.5;">
-                    <li>✓ 23세 이상 성인 (2004년생부터)</li>
-                    <li>✓ 핵 및 비인가 프로그램 사용자 절대 금지</li>
-                    <li>✓ 디스코드 및 마이크 사용 필수</li>
-                    <li>✓ 이중 클랜 및 비매너 행위 금지</li>
-                </ul>
-            </div>
-            <div style="background:#111; padding:40px; border-radius:12px; border-left: 5px solid #ff5e00;">
-                <h3 style="color:#ff5e00; margin-bottom: 25px;">가입 절차</h3>
-                <ul style="list-style:none; padding:0; line-height: 2.5;">
-                    <li>1. 홈페이지 회원가입 및 이메일 인증</li>
-                    <li>2. 하단 버튼 클릭 후 구글 신청서 제출</li>
-                    <li>3. 운영진 개별 연락 및 테스트 매치</li>
-                    <li>4. 최종 승인 및 클랜 공식 등록</li>
-                </ul>
-            </div>
-        </div>
-        <a href="https://forms.gle/zDusmBGTh7dqFHZD6" target="_blank" style="display:block; width:100%; padding:30px; background:#ff5e00; color:#fff; text-align:center; text-decoration:none; font-weight:900; font-size:1.5rem; margin-top:40px; border-radius:8px;">CLIX 가입 신청서 작성하러 가기</a>
     </section>
 
     <footer>&copy; 2026 CLAN CLIX. ALL RIGHTS RESERVED.</footer>
@@ -290,7 +265,7 @@
         function showMap(mapName, btn) {
             const btns = document.querySelectorAll('.map-nav-btn'); btns.forEach(b => b.classList.remove('active')); btn.classList.add('active');
             const data = { 
-                'erangel': ['erangel.jpg', 'ERANGEL 전략', '- 주요 차량 스폰: 강남, 포친키. 1페 중앙 점령 추천<br>- 외곽 강하: 밀타 파워, 노보 파밍 시 보트/차량 선점 필수<br>- 밀베 자기장: 다리 검문 대비 및 해안가 시야 확보<br>- 대도시: 시가전 시 옥상 선점 및 투척물 활용<br>- 평야 교전: 볏짚과 해우소 활용 거점 방어<br>- 기습 포인트: 해우소 지붕 위 점령 통행세 징수'],
+                'erangel': ['erangel.jpg', 'ERANGEL 전략', '- 주요 차량 스폰: 강남, 포친키. 1페 중앙 점령 추천<br>- 외곽 강하: 밀타 파워 보트 필수<br>- 밀베 자기장: 다리 검문 대비 및 해안가 시야 확보<br>- 대도시: 시가전 시 옥상 선점 및 투척물 활용<br>- 평야 교전: 볏짚과 해우소 활용 거점 방어<br>- 기습 포인트: 해우소 지붕 위 점령 통행세 징수'],
                 'miramar': ['miramar.jpg', 'MIRAMAR 전략', '- 고지대 능선 점령 필수 시야 확보가 핵심.<br>- 무기 구성: DMR/SR 장거리 무기 필수<br>- 차량: 픽업트럭 확보 및 능선 하단 회전<br>- 도심지 진입: 페카도, 로스 레오네스 창문/옥상 클리어링<br>- 지형 활용: 분지 지형 굴곡을 활용한 하이딩 및 기습']
             };
             const m = data[mapName];
