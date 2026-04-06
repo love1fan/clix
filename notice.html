@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLIX NOTICE</title>
+    <title>NOTICE | CLIX CLAN</title>
     <style>
         /* 1. 복사 방지 설정 (드래그 및 선택 금지) */
         body { 
@@ -13,41 +13,23 @@
         }
 
         /* 2. ✅ 상단 네비게이션 파란 박스 완전 박멸 */
-        nav { 
-            display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; 
-            background: rgba(0,0,0,0.95) !important; position: fixed; width: 100%; top: 0; left: 0; 
-            box-sizing: border-box; z-index: 100; border-bottom: 1px solid #222; 
-        }
-        nav .logo { 
-            font-weight: 900; font-size: 26px; color: #ff5e00 !important; text-decoration: none !important;
-            background: none !important; background-color: transparent !important; padding: 0 !important;
-            border: none !important; box-shadow: none !important;
-        }
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; background: rgba(0,0,0,0.95) !important; position: fixed; width: 100%; top: 0; left: 0; box-sizing: border-box; z-index: 100; border-bottom: 1px solid #222; }
+        nav .logo { font-weight: 900; font-size: 26px; color: #ff5e00 !important; text-decoration: none !important; background: none !important; background-color: transparent !important; padding: 0 !important; border: none !important; box-shadow: none !important; }
         nav ul { list-style: none; display: flex; margin: 0; padding: 0; background: none !important; }
-        nav ul li a { 
-            margin-left: 20px; font-size: 12px; color: #999 !important; text-decoration: none !important; 
-            text-transform: uppercase; background: none !important; background-color: transparent !important;
-        }
-        nav ul li a:hover { color: #ff5e00 !important; }
+        nav ul li a { margin-left: 20px; font-size: 12px; color: #999 !important; text-decoration: none !important; text-transform: uppercase; background: none !important; }
 
-        /* 3. 헤더 디자인 (주황색 포인트) */
+        /* 3. 헤더 및 안내 박스 디자인 */
         .header { border-bottom: 2px solid #ff5e00; padding-bottom: 20px; margin-top: 80px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center; }
         h1 { color: #ff5e00; letter-spacing: 2px; margin: 0; font-size: 1.8rem; text-transform: uppercase; }
         .back-btn { color: #888; text-decoration: none; border: 1px solid #333; padding: 8px 18px; font-size: 0.8rem; font-weight: bold; border-radius: 4px; }
 
-        /* 4. 안내 문구 박스 */
-        .info-box { 
-            background: #111; border: 2px solid #ff5e00; padding: 20px; margin-bottom: 40px; 
-            border-radius: 4px; color: #aaa; font-size: 0.9rem; 
-        }
-
-        /* 5. Disqus 영역 디자인 */
-        #disqus_thread { 
-            background: #111; padding: 30px; border-radius: 8px; border: 1px solid #222; min-height: 400px;
-        }
+        .info-box { background: #111; border: 2px solid #ff5e00; padding: 20px; margin-bottom: 40px; border-radius: 4px; color: #aaa; font-size: 0.9rem; }
+        
+        /* 4. Disqus 영역 확보 */
+        #disqus_thread { background: #111; padding: 30px; border-radius: 8px; border: 1px solid #222; min-height: 500px; }
     </style>
 </head>
-<body oncontextmenu="return false" onselectstart="return false">
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
 
     <nav>
         <a href="index.html" class="logo">CLAN CLIX</a>
@@ -59,12 +41,12 @@
     </nav>
 
     <div class="header">
-        <h1>CLIX NOTICE</h1>
-        <a href="index.html" class="back-btn">BACK TO HOME</a>
+        <h1>OFFICIAL NOTICE</h1>
+        <a href="index.html" class="back-btn">HOME</a>
     </div>
 
     <div class="info-box">
-        📢 <strong style="color:#ff5e00;">필독 공지사항:</strong> 클랜 공식 소식입니다. 중요 내용은 상단 고정되어 있습니다. (복사 및 우클릭 금지)
+        📢 <strong style="color:#ff5e00;">클랜 공식 알림:</strong> 중요 소식은 이곳에서 확인하세요. (복사 및 우클릭 금지)
     </div>
 
     <div id="disqus_thread"></div>
@@ -72,13 +54,13 @@
     <script>
         var disqus_config = function () {
             this.page.url = window.location.href;  
-            this.page.identifier = 'clix_notice_shared_v7'; // 보드와 겹치지 않는 고유 ID
+            this.page.identifier = 'clix_notice_final_fixed'; 
         };
 
         (function() { 
             var d = document, s = d.createElement('script');
-            // ⚠️ 'clix-clan'이 본인 숏네임인지 확인!
-            s.src = 'https://clix-clan.disqus.com/embed.js'; 
+            // ✅ Shortname을 'korclix'로 수정 완료했습니다.
+            s.src = 'https://korclix.disqus.com/embed.js'; 
             s.setAttribute('data-timestamp', +new Date());
             (d.head || d.body).appendChild(s);
         })();
