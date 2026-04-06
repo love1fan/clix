@@ -219,24 +219,32 @@
             const password = document.getElementById('auth-password').value;
 
             if (isLoginMode) {
-                auth.signInWithEmailAndPassword(email, password).catch(err => alert("오류: " + err.message));
+                auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    if (!userCredential.user.emailVerified) {
+                        alert("이메일 인증이 필요합니다. 메일함을 확인해주세요.");
+                    }
+                })
+                .catch(err => alert("로그인 오류: " + err.message));
             } else {
                 const nickname = document.getElementById('auth-nickname').value;
                 const age = document.getElementById('auth-age').value;
-                if(!nickname || !age) return alert("닉네임과 나이를 입력하세요.");
+                if(!nickname || !age) return alert("닉네임과 나이를 입력해주세요.");
 
                 auth.createUserWithEmailAndPassword(email, password)
                 .then((res) => {
-                    res.user.sendEmailVerification();
-                    return db.collection("users").doc(res.user.uid).set({
-                        nickname: nickname, age: age, email: email, joinedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    // 회원가입 직후 바로 인증 메일 발송
+                    return res.user.sendEmailVerification().then(() => {
+                        alert(email + " 주소로 인증 메일을 보냈습니다. 확인 후 로그인해주세요!");
+                        // DB 정보 저장
+                        return db.collection("users").doc(res.user.uid).set({
+                            nickname: nickname, age: age, email: email, joinedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
                     });
                 })
-                .then(() => alert("회원가입 완료! 이메일 인증 링크를 클릭해주세요."))
-                .catch(err => alert("가입 실패: " + err.message));
+                .catch(err => alert("가입 및 메일 발송 실패: " + err.message));
             }
         }
-
         function resendEmail() { auth.currentUser.sendEmailVerification().then(() => alert("인증 메일이 재발송되었습니다.")); }
         function logout() { if(confirm("로그아웃 하시겠습니까?")) auth.signOut(); }
 
