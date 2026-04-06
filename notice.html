@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CLIX NOTICE</title>
     <style>
+        /* 겹침 오류 원천 차단: body 상단에 120px 패딩 부여 */
         body { 
-            margin: 0; padding: 0 8% 50px 8%; background-color: #0a0a0a; color: #ffffff; 
+            margin: 0; padding: 120px 8% 50px 8%; background-color: #0a0a0a; color: #ffffff; 
             font-family: 'Inter', sans-serif; line-height: 1.6;
             -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
         }
@@ -20,8 +21,8 @@
         nav ul { list-style: none; display: flex; margin: 0; padding: 0; }
         nav ul li a { margin-left: 20px; font-size: 12px; color: #999; text-decoration: none; text-transform: uppercase; }
 
-        /* 겹침 오류 수정: margin-top 120px 적용 */
-        .header { border-bottom: 2px solid #ff5e00; padding-bottom: 20px; margin-top: 120px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center; }
+        /* margin-top 삭제 (body 패딩으로 대체) */
+        .header { border-bottom: 2px solid #ff5e00; padding-bottom: 20px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center; }
         h1 { color: #ff5e00; letter-spacing: 3px; margin: 0; font-size: 2rem; text-transform: uppercase; font-weight: 900; }
         .back-btn { color: #888; text-decoration: none; border: 1px solid #333; padding: 10px 25px; border-radius: 4px; font-weight: bold; transition: 0.3s; }
         .back-btn:hover { background: #ff5e00; color: #fff; border-color: #ff5e00; }
