@@ -65,14 +65,23 @@
         .stream-tab-btn.active { background: #ff5e00; color: #fff; border-color: #ff5e00; box-shadow: 0 0 15px rgba(255, 94, 0, 0.3); }
         .stream-tab-btn:hover { border-color: #ff5e00; color: #fff; }
         .stream-container { 
-            display: grid; grid-template-columns: 2.5fr 1fr; gap: 40px; 
-            background: #0d0d0d; padding: 40px; border-radius: 12px; border: 1px solid #222; 
+            display: grid; grid-template-columns: 2.2fr 1.3fr; gap: 20px; 
+            background: #0d0d0d; padding: 25px; border-radius: 12px; border: 1px solid #222; 
         }
         .video-wrapper { 
             background: #000; border-radius: 8px; overflow: hidden; 
             aspect-ratio: 16 / 9; border: 1px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
-        .stream-info { display: flex; flex-direction: column; justify-content: center; text-align: left; }
+        
+        /* 🔥 채팅 UI 스타일 */
+        .chat-box-wrapper { background: #111; border: 1px solid #222; border-radius: 8px; display: flex; flex-direction: column; height: 100%; min-height: 400px; }
+        #chat-messages { flex: 1; padding: 15px; overflow-y: auto; font-size: 0.85rem; color: #ccc; scroll-behavior: smooth; }
+        .chat-msg-item { margin-bottom: 10px; line-height: 1.4; border-bottom: 1px solid #1a1a1a; padding-bottom: 5px; }
+        .chat-nickname { color: #ff5e00; font-weight: 800; margin-right: 5px; font-size: 0.75rem; }
+        .chat-input-area { padding: 10px; border-top: 1px solid #222; display: flex; gap: 8px; background: #151515; }
+        #chat-input { flex: 1; background: #000; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 4px; font-size: 0.85rem; outline: none; }
+        #chat-input:focus { border-color: #ff5e00; }
+        .chat-send-btn { background: #ff5e00; color: #fff; border: none; padding: 0 15px; border-radius: 4px; font-weight: 800; cursor: pointer; font-size: 0.8rem; }
 
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-top: 50px; }
         .stat-card { background: rgba(17, 17, 17, 0.9); border: 1px solid #222; border-radius: 12px; padding: 35px; transition: 0.3s; position: relative; overflow: hidden; }
@@ -174,19 +183,22 @@
             <button class="stream-tab-btn" onclick="changeStream('soop', '스트리머ID', this)">SOOP</button>
             <button class="stream-tab-btn" onclick="changeStream('youtube', 'UCfcHk_zLlYAM8tqdwX8uVlQ', this)">YOUTUBE</button>
         </div>
+        
         <div class="stream-container">
             <div class="video-wrapper">
                 <iframe id="live-iframe" src="https://chzzk.naver.com/live/스트리머UID/embed" frameborder="0" allowfullscreen="true" width="100%" height="100%"></iframe>
             </div>
-            <div class="stream-info">
-                <h3 id="streamer-name" style="color:#ff5e00; margin-top:0;">ON AIR: CLIX STREAMER</h3>
-                <p style="color:#aaa; font-size:0.9rem; line-height: 1.8;">
-                    우리 클랜원들의 박진감 넘치는 플레이를 실시간으로 응원하세요!<br>
-                    플랫폼 탭을 클릭하여 다른 방송을 확인할 수 있습니다.
-                </p>
-                <div style="margin-top:20px;">
-                    <span class="tag" style="background:#ff5e00; color:#fff; border:none; padding:5px 15px;">LIVE</span>
-                    <span class="tag" style="border:1px solid #333; color:#666; padding:5px 15px;">PUBG</span>
+            
+            <div class="chat-box-wrapper">
+                <div style="padding: 12px; border-bottom: 1px solid #222; display: flex; align-items: center; gap: 8px;">
+                    <span style="width: 8px; height: 8px; background: #ff5e00; border-radius: 50%; box-shadow: 0 0 5px #ff5e00;"></span>
+                    <span style="font-size: 0.8rem; font-weight: 900; letter-spacing: 1px;">CLIX LIVE CHAT</span>
+                </div>
+                <div id="chat-messages">
+                    </div>
+                <div class="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="로그인 후 채팅 가능..." autocomplete="off">
+                    <button class="chat-send-btn" onclick="sendMessage()">SEND</button>
                 </div>
             </div>
         </div>
@@ -257,6 +269,8 @@
                     db.collection("users").doc(user.uid).get().then((doc) => {
                         const nick = doc.exists ? doc.data().nickname : user.email.split('@')[0];
                         document.getElementById('nav-user-info').innerText = nick + "님 반갑습니다";
+                        // 로그인 성공 시 채팅방 초기화
+                        loadMessages();
                     });
                 } else {
                     overlay.style.display = 'flex';
@@ -310,25 +324,62 @@
         }
 
         function changeStream(platform, id, btn) {
-    const iframe = document.getElementById('live-iframe');
-    const btns = document.querySelectorAll('.stream-tab-btn');
-    const streamerName = document.getElementById('streamer-name');
+            const iframe = document.getElementById('live-iframe');
+            const btns = document.querySelectorAll('.stream-tab-btn');
+            btns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
 
-    btns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+            if (platform === 'chzzk') {
+                iframe.src = `https://chzzk.naver.com/live/${id}/embed`;
+            } else if (platform === 'soop') {
+                iframe.src = `https://play.soop.st/embed/station/${id}`;
+            } else if (platform === 'youtube') {
+                iframe.src = `https://www.youtube.com/embed/live_stream?channel=${id}&autoplay=1&mute=1`;
+            }
+        }
 
-    if (platform === 'chzzk') {
-        iframe.src = `https://chzzk.naver.com/live/${id}/embed`;
-        streamerName.innerText = "ON AIR: CHZZK LIVE";
-    } else if (platform === 'soop') {
-        iframe.src = `https://play.soop.st/embed/station/${id}`;
-        streamerName.innerText = "ON AIR: SOOP LIVE";
-    } else if (platform === 'youtube') {
-        // 중괄호 ${id}를 정확히 닫았습니다.
-        iframe.src = `https://www.youtube.com/embed/live_stream?channel=${id}&autoplay=1&mute=1`;
-        streamerName.innerText = "ON AIR: YOUTUBE LIVE";
-    }
-}
+        // 🔥 실시간 채팅 로직
+        function loadMessages() {
+            const chatBox = document.getElementById('chat-messages');
+            db.collection("chats")
+                .orderBy("createdAt", "asc")
+                .limitToLast(50)
+                .onSnapshot((snapshot) => {
+                    chatBox.innerHTML = "";
+                    snapshot.forEach((doc) => {
+                        const data = doc.data();
+                        const div = document.createElement('div');
+                        div.className = 'chat-msg-item';
+                        div.innerHTML = `<span class="chat-nickname">${data.nickname}</span> ${data.text}`;
+                        chatBox.appendChild(div);
+                    });
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                });
+        }
+
+        function sendMessage() {
+            const user = auth.currentUser;
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+
+            if (!user) return alert("로그인 후 이용 가능합니다.");
+            if (!message) return;
+
+            db.collection("users").doc(user.uid).get().then((doc) => {
+                const nickname = doc.exists ? doc.data().nickname : "익명";
+                db.collection("chats").add({
+                    nickname: nickname,
+                    text: message,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                }).then(() => {
+                    input.value = "";
+                });
+            });
+        }
+
+        document.getElementById('chat-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
     </script>
 </body>
 </html>
