@@ -18,25 +18,22 @@
         nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; background: rgba(0,0,0,0.95) !important; position: fixed; width: 100%; top: 0; left: 0; box-sizing: border-box; z-index: 100; border-bottom: 1px solid #222; }
         nav .logo { font-weight: 900; font-size: 26px; color: #ff5e00 !important; text-decoration: none !important; background: none !important; padding: 0 !important; }
         nav ul { list-style: none; display: flex; margin: 0; padding: 0; }
-        nav ul li a { margin-left: 20px; font-size: 12px; color: #999; text-decoration: none; text-transform: uppercase; }
+        nav ul li a { margin-left: 20px; font-size: 12px; color: #999; text-decoration: none; text-transform: uppercase; font-weight: 600; }
 
         .header { border-bottom: 2px solid #ff5e00; padding-bottom: 20px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center; }
         h1 { color: #ff5e00; letter-spacing: 3px; margin: 0; font-size: 2rem; text-transform: uppercase; font-weight: 900; }
         
-        /* 버튼 영역 스타일 */
         .header-btns { display: flex; gap: 10px; }
         .back-btn { color: #888; text-decoration: none; border: 1px solid #333; padding: 10px 25px; border-radius: 4px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; }
         .back-btn:hover { background: #ff5e00; color: #fff; border-color: #ff5e00; }
         .admin-btn { background: transparent; color: #ff5e00; border: 1px solid #ff5e00; padding: 10px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: 0.3s; font-family: inherit; }
         .admin-btn:hover { background: #ff5e00; color: #fff; }
 
-        /* 커스텀 공지사항 작성 폼 */
         #admin-editor { display: none; border: 2px solid #ff5e00; padding: 25px; margin-bottom: 40px; border-radius: 4px; background: #111; }
         .editor-title { color: #ff5e00; font-weight: bold; margin-bottom: 15px; display: block; }
-        input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; background: #1a1a1a; border: 1px solid #333; color: #fff; box-sizing: border-box; font-family: inherit; }
-        .btn-save { background: #ff5e00; color: #fff; padding: 12px; border: none; font-weight: bold; cursor: pointer; width: 100%; text-transform: uppercase; }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; background: #1a1a1a; border: 1px solid #333; color: #fff; box-sizing: border-box; font-family: inherit; border-radius: 4px; }
+        .btn-save { background: #ff5e00; color: #fff; padding: 12px; border: none; font-weight: bold; cursor: pointer; width: 100%; text-transform: uppercase; border-radius: 4px; }
 
-        /* 공지사항 출력 목록 */
         .info-box { background: #111; border-left: 5px solid #ff5e00; padding: 25px; margin-bottom: 40px; color: #aaa; font-size: 0.95rem; border-radius: 2px; }
         .notice-list { display: flex; flex-direction: column; gap: 20px; }
         .notice-card { background: #111; border: 1px solid #222; border-radius: 8px; padding: 30px; position: relative; }
@@ -45,7 +42,15 @@
         .notice-tag { background: #ff5e00; color: #fff; padding: 3px 10px; border-radius: 3px; font-size: 0.8rem; margin-right: 10px; }
         .notice-date { color: #666; font-size: 0.9rem; }
         .notice-content { color: #bbb; white-space: pre-wrap; line-height: 1.8; }
-        .btn-del { color: #ff3333; cursor: pointer; font-size: 0.8rem; position: absolute; bottom: 20px; right: 30px; display: none; text-decoration: underline; }
+        
+        /* 삭제 버튼 스타일 */
+        .btn-del { 
+            color: #ff3333; cursor: pointer; font-size: 0.8rem; 
+            position: absolute; bottom: 20px; right: 30px; 
+            display: none; text-decoration: none; border: 1px solid #422; 
+            padding: 4px 10px; border-radius: 4px; font-weight: bold;
+        }
+        .btn-del:hover { background: #ff3333; color: #fff; }
     </style>
 </head>
 <body oncontextmenu="return false" onselectstart="return false">
@@ -69,8 +74,10 @@
 
     <div id="admin-editor">
         <span class="editor-title">새 공지사항 작성</span>
-        <input type="text" id="tag" placeholder="태그 (예: [필독], [공지])" style="width: 20%;">
-        <input type="text" id="title" placeholder="제목을 입력하세요" style="width: 78%; float: right;">
+        <div style="display: flex; gap: 10px;">
+            <input type="text" id="tag" placeholder="태그 (예: [필독])" style="width: 20%;">
+            <input type="text" id="title" placeholder="제목을 입력하세요" style="width: 80%;">
+        </div>
         <textarea id="content" rows="6" placeholder="내용을 입력하세요"></textarea>
         <button class="btn-save" onclick="saveNotice()">공지 등록하기</button>
     </div>
@@ -84,14 +91,14 @@
     </div>
 
     <script>
-        // Firebase 설정
+        // Firebase 설정 (API Key 오타 수정 및 통합)
         const firebaseConfig = {
-            apiKey: "AIzaSyAFSAu2aynX6YPiJEatWy9IQgWgUuTxBds",
+            apiKey: "AIzaSyAFSAu2aynX6YPiJEatWy9IQgWgUuTx8ds",
             authDomain: "korclix.firebaseapp.com",
             projectId: "korclix",
             storageBucket: "korclix.firebasestorage.app",
             messagingSenderId: "472792477536",
-            appId: "1:472792477536:web:14907e228c343b72fd7005"
+            appId: "1:472792477536:web:14907e228c343b72fd7805"
         };
 
         firebase.initializeApp(firebaseConfig);
@@ -104,24 +111,28 @@
             loadNotices();
         };
 
-        // 관리자 인증
+        // 관리자 인증 (비밀번호: 9763)
         function authAdmin() {
-            if(prompt("관리자 코드를 입력하세요.") === "9763") {
+            const input = prompt("관리자 코드를 입력하세요.");
+            if(input === "9763") {
                 sessionStorage.setItem('clix_master', 'true');
                 showAdminUI();
                 alert("관리자 모드가 활성화되었습니다.");
-            } else {
+                location.reload(); // 즉시 UI 반영을 위해 새로고침
+            } else if (input !== null) {
                 alert("비밀번호가 일치하지 않습니다.");
             }
         }
 
         function showAdminUI() {
             document.getElementById('admin-editor').style.display = 'block';
-            document.querySelectorAll('.btn-del').forEach(b => b.style.display = 'block');
-            document.querySelector('.admin-btn').style.display = 'none'; // 로그인 성공 시 버튼 숨김
+            const delBtns = document.querySelectorAll('.btn-del');
+            delBtns.forEach(b => b.style.display = 'block');
+            const adminLoginBtn = document.querySelector('.admin-btn');
+            if(adminLoginBtn) adminLoginBtn.style.display = 'none';
         }
 
-        // Firebase 데이터 실시간 불러오기
+        // 공지사항 실시간 로드
         function loadNotices() {
             db.collection("notices").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
                 const container = document.getElementById('notice-container');
@@ -134,7 +145,7 @@
 
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
-                    const dateStr = data.timestamp ? data.timestamp.toDate().toLocaleDateString() : '방금 전';
+                    const dateStr = data.timestamp ? data.timestamp.toDate().toLocaleDateString('ko-KR') : '방금 전';
                     const adminDisplay = sessionStorage.getItem('clix_master') === 'true' ? 'block' : 'none';
 
                     container.innerHTML += `
@@ -151,11 +162,11 @@
             });
         }
 
-        // Firebase 데이터 쓰기
+        // 공지 등록
         function saveNotice() {
-            const t = document.getElementById('title').value;
-            const g = document.getElementById('tag').value || '[공지]';
-            const c = document.getElementById('content').value;
+            const t = document.getElementById('title').value.trim();
+            const g = document.getElementById('tag').value.trim() || '[공지]';
+            const c = document.getElementById('content').value.trim();
 
             if(!t || !c) {
                 alert("제목과 내용을 모두 입력하십시오.");
@@ -173,17 +184,16 @@
                 document.getElementById('content').value = '';
                 alert("공지가 성공적으로 등록되었습니다.");
             }).catch((error) => {
-                console.error("작성 실패: ", error);
-                alert("오류가 발생했습니다.");
+                alert("오류가 발생했습니다: " + error.message);
             });
         }
 
-        // Firebase 데이터 삭제
+        // 공지 삭제
         function deleteNotice(docId) {
-            if(confirm("이 공지를 삭제하시겠습니까?")) {
-                db.collection("notices").doc(docId).delete().catch((error) => {
-                    console.error("삭제 실패: ", error);
-                });
+            if(confirm("이 공지사항을 정말로 삭제하시겠습니까?")) {
+                db.collection("notices").doc(docId).delete()
+                .then(() => alert("삭제되었습니다."))
+                .catch((error) => alert("삭제 실패: " + error.message));
             }
         }
     </script>
