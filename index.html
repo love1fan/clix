@@ -40,7 +40,9 @@
         nav .logo { font-weight: 900; font-size: 26px; color: #ff5e00 !important; letter-spacing: 2px; text-transform: uppercase; text-decoration: none !important; }
         nav ul { list-style: none; display: flex; margin: 0; padding: 0; align-items: center; }
         nav ul li a { margin-left: 20px; font-size: 12px; font-weight: 600; color: #999 !important; text-decoration: none !important; text-transform: uppercase; }
-        .logout-link { margin-left: 20px; font-size: 10px; color: #ff3333 !important; cursor: pointer; border: 1px solid #444; padding: 5px 10px; border-radius: 4px; font-weight: bold; }
+        .logout-link { margin-left: 10px; font-size: 10px; color: #ff3333 !important; cursor: pointer; border: 1px solid #444; padding: 5px 10px; border-radius: 4px; font-weight: bold; }
+        .admin-link { margin-left: 20px; font-size: 10px; color: #f1c40f !important; cursor: pointer; border: 1px solid #444; padding: 5px 10px; border-radius: 4px; font-weight: bold; }
+        .admin-link:hover, .logout-link:hover { background: rgba(255,255,255,0.1); }
 
         .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center; }
         .hero h1 { font-size: 8rem; margin: 0; letter-spacing: 20px; font-weight: 900; text-shadow: 0 0 30px rgba(255, 94, 0, 0.5); text-transform: uppercase; }
@@ -65,7 +67,6 @@
         .stream-tab-btn.active { background: #ff5e00; color: #fff; border-color: #ff5e00; box-shadow: 0 0 15px rgba(255, 94, 0, 0.3); }
         .stream-tab-btn:hover { border-color: #ff5e00; color: #fff; }
 
-        /* 🔥 라이브 스트림 및 채팅창 크기 확장 */
         .stream-container { 
             display: grid; grid-template-columns: 2.5fr 1fr; gap: 20px; 
             background: #0d0d0d; padding: 25px; border-radius: 12px; border: 1px solid #222; 
@@ -126,7 +127,7 @@
         .tier-gold { color: #ffcc00; border-color: #ffcc00; }
         .tier-bronze { color: #cd7f32; border-color: #cd7f32; }
 
-        footer { padding: 80px; text-align: center; color: #444; border-top: 1px solid #222; text-transform: uppercase; cursor: pointer; }
+        footer { padding: 80px; text-align: center; color: #444; border-top: 1px solid #222; text-transform: uppercase; }
         @media (max-width: 900px) { .about-wrapper, .stats-grid, .stream-container, .discord-container { grid-template-columns: 1fr; } .hero h1 { font-size: 4rem; } .stream-container { height: auto; max-height: none; } }
 
         #music-player {
@@ -210,6 +211,7 @@
             <li><a href="#members">STATS</a></li>
             <li><a href="members.html">MEMBERS</a></li>
             <li id="nav-user-info" style="color:#ff5e00; font-size:10px; margin-left:20px; font-weight: bold;"></li>
+            <li><span class="admin-link" onclick="document.getElementById('admin-lock').style.display='flex'">ADMIN</span></li>
             <li><span class="logout-link" onclick="logout()">LOGOUT</span></li>
         </ul>
     </nav>
@@ -330,7 +332,7 @@
         <div style="margin-top:50px; text-align:center;"><a href="https://pubg.op.gg" target="_blank" style="color:#ff5e00; text-decoration:none; font-weight:800; border: 1px solid #ff5e00; padding: 10px 20px; border-radius: 4px;">PUBG.OP.GG 바로가기</a></div>
     </section>
 
-    <footer onclick="adminFooterClick()">&copy; 2026 CLAN CLIX. ALL RIGHTS RESERVED.</footer>
+    <footer>&copy; 2026 CLAN CLIX. ALL RIGHTS RESERVED.</footer>
 
     <script>
         const firebaseConfig = {
@@ -346,27 +348,9 @@
         const db = firebase.firestore();
 
         const ADMIN_NICKNAMES = ["CLIX_0dB", "관리자닉네임"];
-
-        // 🔥 숨겨진 관리자 접속 로직 추가
-        const ADMIN_PW = "CLIX1234!!"; // 관리자 암호
-        let footerClickCount = 0;
-
-        // 단축키로 접근 (Ctrl + Shift + L)
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.shiftKey && e.key === 'L') {
-                document.getElementById('admin-lock').style.display = 'flex';
-            }
-        });
-
-        // 모바일/마우스 환경: Footer 5번 연속 클릭 시 접근
-        function adminFooterClick() {
-            footerClickCount++;
-            if (footerClickCount >= 5) {
-                document.getElementById('admin-lock').style.display = 'flex';
-                footerClickCount = 0;
-            }
-            setTimeout(() => { footerClickCount = 0; }, 3000);
-        }
+        
+        // 🔥 관리자 비밀번호 9763으로 변경
+        const ADMIN_PW = "9763"; 
 
         // 암호 확인 및 권한 부여
         function checkAdmin() {
