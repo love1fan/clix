@@ -8,40 +8,48 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <style>
-        body { margin: 0; padding: 140px 8% 50px 8%; background-color: #0a0a0a; color: #ffffff; font-family: 'Inter', sans-serif; line-height: 1.6; }
+        body { margin: 0; padding: 140px 8% 50px 8%; background-color: #0a0a0a; color: #ffffff; font-family: 'Inter', sans-serif; line-height: 1.6; -webkit-user-select: none; user-select: none; }
         nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; background: rgba(0,0,0,0.95) !important; position: fixed; width: 100%; top: 0; left: 0; box-sizing: border-box; z-index: 100; border-bottom: 1px solid #222; }
         nav .logo { font-weight: 900; font-size: 26px; color: #ff5e00 !important; text-decoration: none; text-transform: uppercase; }
         nav ul { list-style: none; display: flex; margin: 0; padding: 0; }
         nav ul li a { margin-left: 20px; font-size: 12px; color: #999; text-decoration: none; text-transform: uppercase; font-weight: 600; }
         .header { border-bottom: 2px solid #ff5e00; padding-bottom: 20px; margin-bottom: 40px; }
         h1 { color: #ff5e00; letter-spacing: 3px; margin: 0; font-size: 2.5rem; text-transform: uppercase; font-weight: 900; }
+        
+        /* 글쓰기 구역 */
         #write-section { display: none; border: 1px solid #222; padding: 30px; margin-bottom: 50px; border-radius: 8px; background: #111; }
-        textarea { width: 100%; padding: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 4px; box-sizing: border-box; resize: none; margin-bottom: 15px; }
-        input[type="text"] { width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 4px; margin-bottom: 15px; box-sizing: border-box; }
+        textarea { width: 100%; padding: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 4px; box-sizing: border-box; resize: none; margin-bottom: 15px; font-family: inherit; }
+        input[type="text"] { width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 4px; margin-bottom: 15px; box-sizing: border-box; font-family: inherit; }
         .btn-post { background: #ff5e00; color: #fff; padding: 15px; border: none; font-weight: 900; cursor: pointer; width: 100%; text-transform: uppercase; border-radius: 4px; }
+        
+        /* 게시글 카드 */
         .post-card { background: #111; border: 1px solid #222; border-radius: 12px; padding: 30px; margin-bottom: 25px; position: relative; }
         .post-header { display: flex; justify-content: space-between; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #222; }
         .post-author { color: #ff5e00; font-weight: 800; }
-        .post-content { color: #ddd; white-space: pre-wrap; margin-bottom: 15px; font-size: 1.1rem; }
-        .post-media { margin-top: 15px; }
+        .post-date { color: #555; font-size: 0.8rem; }
+        .post-content { color: #ddd; white-space: pre-wrap; font-size: 1.1rem; margin-bottom: 15px; }
+        
+        /* 미디어 출력 */
+        .post-media { margin-top: 15px; text-align: center; }
         .post-media img, .post-media video { max-width: 100%; border-radius: 8px; border: 1px solid #333; display: block; margin: 0 auto; }
-        .btn-del { color: #ff3333; cursor: pointer; font-size: 0.8rem; background: none; border: 1px solid #422; padding: 5px 12px; border-radius: 4px; margin-top: 20px; transition: 0.3s; }
-        .btn-del:hover { background: #422; color: #fff; }
+        
+        /* 삭제 버튼 */
+        .btn-del { color: #ff3333; cursor: pointer; font-size: 0.75rem; position: absolute; bottom: 30px; right: 30px; display: none; font-weight: bold; border: 1px solid #422; padding: 5px 10px; border-radius: 4px; }
+        .btn-del:hover { background: #ff3333; color: #fff; }
     </style>
 </head>
 <body>
-    <nav><a href="index.html" class="logo">CLAN CLIX</a><ul><li><a href="index.html#about">ABOUT</a></li><li><a href="board.html" style="color: #ff5e00;">BOARD</a></li></ul></nav>
+    <nav><a href="index.html" class="logo">CLAN CLIX</a><ul><li><a href="index.html#about">ABOUT</a></li><li><a href="notice.html">NOTICE</a></li><li><a href="board.html" style="color:#ff5e00;">BOARD</a></li></ul></nav>
     <div class="header"><h1>BOARD</h1></div>
 
     <div id="write-section">
         <div id="display-nick" style="color:#ff5e00; font-weight:800; margin-bottom:10px;">작성자 로딩 중...</div>
-        <textarea id="post-content" rows="4" placeholder="클랜원들과 공유할 내용을 입력하세요."></textarea>
+        <textarea id="post-content" rows="4" placeholder="내용을 입력하세요."></textarea>
         <input type="text" id="media-url" placeholder="사진 또는 영상 주소(URL)를 입력 (예: https://.../image.jpg)">
         <button class="btn-post" onclick="savePost()">POST MESSAGE</button>
     </div>
 
-    <div id="login-notice" style="text-align:center; padding:30px; border:1px dashed #333; color:#555;">로그인 및 이메일 인증 후 작성 가능합니다. <a href="index.html" style="color:#ff5e00;">로그인하러 가기</a></div>
-    
+    <div id="login-notice" style="text-align:center; padding:30px; border:1px dashed #333; color:#555;">로그인 회원만 작성 가능합니다. <a href="index.html" style="color:#ff5e00;">로그인하기</a></div>
     <div id="board-container"></div>
 
     <script>
@@ -57,16 +65,11 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
         let userNick = "";
-        let isMaster = false;
 
         auth.onAuthStateChanged((user) => {
             if (user && user.emailVerified) {
                 document.getElementById('write-section').style.display = 'block';
                 document.getElementById('login-notice').style.display = 'none';
-                
-                // 마스터 계정 확인 (세션스토리지 또는 특정 UID 확인)
-                isMaster = sessionStorage.getItem('clix_master') === 'true';
-
                 db.collection("users").doc(user.uid).get().then(doc => {
                     userNick = doc.exists ? doc.data().nickname : "익명";
                     document.getElementById('display-nick').innerText = "작성자: " + userNick;
@@ -81,29 +84,29 @@
                 container.innerHTML = "";
                 snapshot.forEach(doc => {
                     const data = doc.data();
+                    const date = data.timestamp ? data.timestamp.toDate().toLocaleString('ko-KR') : '방금 전';
+                    const masterMode = sessionStorage.getItem('clix_master') === 'true';
+
                     let mediaHtml = "";
-                    
-                    // URL 확장자로 사진/영상 구분하여 표시
                     if (data.mediaUrl) {
                         const url = data.mediaUrl.toLowerCase();
+                        // 확장자로 사진/영상 구분
                         if (url.match(/\.(mp4|webm|ogg|mov)$/i)) {
                             mediaHtml = `<div class="post-media"><video src="${data.mediaUrl}" controls></video></div>`;
-                        } else if (url.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
-                            mediaHtml = `<div class="post-media"><img src="${data.mediaUrl}"></div>`;
                         } else {
-                            mediaHtml = `<div style="font-size:0.8rem; color:#555; margin-top:10px;">(지원하지 않는 파일 주소입니다)</div>`;
+                            mediaHtml = `<div class="post-media"><img src="${data.mediaUrl}" onerror="this.parentElement.style.display='none'"></div>`;
                         }
                     }
 
-                    // 마스터 계정일 때만 삭제 버튼 노출
-                    const delBtn = isMaster ? `<button class="btn-del" onclick="deletePost('${doc.id}')">게시글 삭제</button>` : "";
-
                     container.innerHTML += `
                         <div class="post-card">
-                            <div class="post-header"><span class="post-author">${data.nickname}</span></div>
+                            <div class="post-header">
+                                <span class="post-author">${data.nickname}</span>
+                                <span class="post-date">${date}</span>
+                            </div>
                             <div class="post-content">${data.content}</div>
                             ${mediaHtml}
-                            ${delBtn}
+                            <button class="btn-del" style="display:${masterMode ? 'block' : 'none'}" onclick="deletePost('${doc.id}')">DELETE</button>
                         </div>`;
                 });
             });
@@ -112,29 +115,21 @@
         async function savePost() {
             const content = document.getElementById('post-content').value.trim();
             const mediaUrl = document.getElementById('media-url').value.trim();
-            if (!content && !mediaUrl) return alert("내용 또는 미디어 주소를 입력하세요.");
+            if (!content && !mediaUrl) return alert("내용 또는 주소를 입력하세요.");
 
-            try {
-                await db.collection("board").add({
-                    nickname: userNick,
-                    content: content,
-                    mediaUrl: mediaUrl || null,
-                    uid: auth.currentUser.uid,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                document.getElementById('post-content').value = "";
-                document.getElementById('media-url').value = "";
-                alert("게시글이 등록되었습니다!");
-            } catch (error) {
-                alert("등록 실패: " + error.message);
-            }
+            await db.collection("board").add({
+                nickname: userNick,
+                content: content,
+                mediaUrl: mediaUrl || null,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            document.getElementById('post-content').value = "";
+            document.getElementById('media-url').value = "";
         }
 
         function deletePost(id) {
-            if (confirm("정말로 이 게시글을 삭제하시겠습니까?")) {
-                db.collection("board").doc(id).delete().then(() => {
-                    alert("삭제되었습니다.");
-                }).catch(err => alert("삭제 실패: " + err.message));
+            if(confirm("이 게시글을 삭제하시겠습니까?")) {
+                db.collection("board").doc(id).delete();
             }
         }
     </script>
