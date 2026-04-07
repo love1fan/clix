@@ -68,18 +68,33 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        let userNick = "";
+        
+        let isUserAdmin = false;
+        let userNick = "익명";
 
         auth.onAuthStateChanged((user) => {
             if (user && user.emailVerified) {
                 document.getElementById('write-section').style.display = 'block';
                 document.getElementById('login-notice').style.display = 'none';
                 db.collection("users").doc(user.uid).get().then(doc => {
-                    userNick = doc.exists ? doc.data().nickname : "익명";
+                    if (doc.exists) {
+                        const data = doc.data();
+                        userNick = data.nickname || user.email.split('@')[0];
+                        isUserAdmin = data.isAdmin === true;
+                    } else {
+                        userNick = user.email.split('@')[0];
+                        isUserAdmin = false;
+                    }
                     document.getElementById('display-nick').innerText = "작성자: " + userNick;
+                    loadPosts();
                 });
+            } else {
+                document.getElementById('write-section').style.display = 'none';
+                document.getElementById('login-notice').style.display = 'block';
+                isUserAdmin = false;
+                userNick = "익명";
+                loadPosts();
             }
-            loadPosts();
         });
 
         function loadPosts() {
@@ -87,9 +102,6 @@
                 const container = document.getElementById('board-container');
                 container.innerHTML = "";
                 
-                // 마스터 권한 확인 (공지사항과 동일한 키 사용)
-                const isMaster = sessionStorage.getItem('clix_master') === 'true';
-
                 snapshot.forEach(doc => {
                     const data = doc.data();
                     const date = data.timestamp ? data.timestamp.toDate().toLocaleString('ko-KR') : '방금 전';
@@ -119,8 +131,8 @@
                         }
                     }
 
-                    // 삭제 버튼 노출 (마스터이거나 본인 글인 경우 - 필요 시 수정)
-                    const delBtn = isMaster ? `<div class="btn-del" onclick="deletePost('${doc.id}')">DELETE</div>` : "";
+                    // 관리자 권한 확인 후 삭제 버튼 노출
+                    const delBtn = isUserAdmin ? `<div class="btn-del" onclick="deletePost('${doc.id}')">DELETE</div>` : "";
 
                     container.innerHTML += `
                         <div class="post-card">
@@ -152,6 +164,10 @@
         }
 
         function deletePost(id) {
+            if (!isUserAdmin) {
+                alert("삭제 권한이 없습니다.");
+                return;
+            }
             if(confirm("이 게시글을 삭제하시겠습니까?")) {
                 db.collection("board").doc(id).delete().then(() => alert("삭제되었습니다."));
             }
