@@ -310,23 +310,25 @@
         }
 
         function changeStream(platform, id, btn) {
-            const iframe = document.getElementById('live-iframe');
-            const btns = document.querySelectorAll('.stream-tab-btn');
-            const streamerName = document.getElementById('streamer-name');
-            btns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            if (platform === 'chzzk') {
-                iframe.src = `https://chzzk.naver.com/live/${id}/embed`;
-                streamerName.innerText = "ON AIR: CHZZK LIVE";
-            } else if (platform === 'soop') {
-                iframe.src = `https://play.soop.st/embed/station/${id}`;
-                streamerName.innerText = "ON AIR: SOOP LIVE";
-            } else if (platform === 'youtube') {
-                // ⚠️ 오타 수정됨: Channal -> embed
-                iframe.src = `https://www.youtube.com/embed/live_stream?channel=${id}&autoplay=1&mute=1`;
-                streamerName.innerText = "ON AIR: YOUTUBE LIVE";
-            }
-        }
+    const iframe = document.getElementById('live-iframe');
+    const btns = document.querySelectorAll('.stream-tab-btn');
+    const streamerName = document.getElementById('streamer-name');
+
+    btns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    if (platform === 'chzzk') {
+        iframe.src = `https://chzzk.naver.com/live/${id}/embed`;
+        streamerName.innerText = "ON AIR: CHZZK LIVE";
+    } else if (platform === 'soop') {
+        iframe.src = `https://play.soop.st/embed/station/${id}`;
+        streamerName.innerText = "ON AIR: SOOP LIVE";
+    } else if (platform === 'youtube') {
+        // 중괄호 ${id}를 정확히 닫았습니다.
+        iframe.src = `https://www.youtube.com/embed/live_stream?channel=${id}&autoplay=1&mute=1`;
+        streamerName.innerText = "ON AIR: YOUTUBE LIVE";
+    }
+}
     </script>
 </body>
 </html>
