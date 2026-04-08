@@ -18,17 +18,13 @@
             margin: 0; font-family: 'Inter', 'Segoe UI', sans-serif; background-color: #0a0a0a; color: #ffffff; 
             line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth;
             -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
-            
-            /* 깔끔하고 날렵한 게이밍 화살표 커서 */
             cursor: url('data:image/svg+xml;utf8,<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4 L22 11 L13 14 L9 24 Z" fill="%23ffffff" stroke="%23000000" stroke-width="1.5"/></svg>') 4 4, auto;
         }
 
-        /* 링크 및 버튼에 올렸을 때 화살표 커서 */
-        a, button, .auth-switch, .logout-link, .tool-btn, .map-nav-btn, .play-toggle, .tool-color, label, .gallery-item, .match-type-btn, .mode-btn {
+        a, button, .auth-switch, .logout-link, .play-toggle, label, .gallery-item, .match-type-btn, .mode-btn {
             cursor: url('data:image/svg+xml;utf8,<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4 L22 11 L13 14 L9 24 Z" fill="%23ff5e00" stroke="%23ffffff" stroke-width="1.5"/></svg>') 4 4, pointer !important;
         }
 
-        /* ================= 시네마틱 로딩 스크린 추가 ================= */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #050505; z-index: 100000;
@@ -40,7 +36,6 @@
         .loading-bar { position: absolute; top: 0; left: 0; height: 100%; width: 50%; background: #ff5e00; animation: loadingAnim 1.5s infinite ease-in-out; }
         .loading-text-sub { margin-top: 15px; font-size: 0.7rem; color: #666; letter-spacing: 3px; font-weight: bold; text-transform: uppercase; animation: blink 1s infinite; }
         @keyframes loadingAnim { 0% { left: -50%; width: 30%; } 50% { width: 30%; } 100% { left: 100%; width: 10%; } }
-        /* ========================================================= */
         
         #lock-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.98); z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; overflow-y: auto; padding: 20px 0; }
         #lock-overlay h2 { font-size: 3.5rem; color: #ff5e00; margin-bottom: 20px; letter-spacing: 5px; font-weight: 900; text-transform: uppercase; }
@@ -77,6 +72,14 @@
         .section { padding: 120px 8%; max-width: 1200px; margin: 0 auto; }
         .section-title { font-size: 2.8rem; font-weight: 800; margin-bottom: 60px; text-align: center; letter-spacing: 8px; color: #ff5e00; text-transform: uppercase; }
 
+        /* 수정된 어바웃 섹션 레이아웃 (지도 제거됨) */
+        .about-wrapper { display: flex; gap: 60px; align-items: center; flex-wrap: wrap; justify-content: space-between; }
+        .about-intro-box { flex: 1; min-width: 300px; }
+        .about-image-box { flex: 1; min-width: 300px; display: flex; justify-content: center; }
+        .about-image-box img { width: 100%; max-width: 600px; border-radius: 12px; border: 1px solid #333; box-shadow: 0 15px 40px rgba(0,0,0,0.8); transition: transform 0.3s; }
+        .about-image-box img:hover { transform: scale(1.02); border-color: #ff5e00; }
+        .tag { padding: 15px 25px; background: #111; border-left: 3px solid #ff5e00; font-weight: 700; margin-right: 10px; display: inline-block; margin-bottom: 10px; }
+
         .mvp-container { display: flex; justify-content: center; margin-bottom: 80px; }
         .mvp-card { background: linear-gradient(135deg, #1f1a00 0%, #000000 100%); border: 1px solid #ffd700; border-radius: 16px; padding: 40px; width: 100%; max-width: 600px; text-align: center; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.15), inset 0 0 20px rgba(255, 215, 0, 0.05); transition: transform 0.3s; }
         .mvp-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(255, 215, 0, 0.25); }
@@ -102,23 +105,6 @@
         .gallery-title { color: #fff; font-weight: 800; font-size: 1.2rem; margin: 0; text-transform: uppercase; }
         .gallery-date { color: #ff5e00; font-size: 0.75rem; font-weight: 700; }
 
-        .about-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
-        .tag { padding: 15px 25px; background: #111; border-left: 3px solid #ff5e00; font-weight: 700; margin-right: 10px; display: inline-block; }
-        .map-dashboard { background: #111; border: 1px solid #222; border-radius: 12px; overflow: hidden; }
-        .map-nav { display: flex; background: #1a1a1a; }
-        .map-nav-btn { flex: 1; padding: 20px; border: none; background: none; color: #666; font-weight: 800; transition: background 0.3s, color 0.3s; }
-        .map-nav-btn.active { background: #ff5e00; color: white; }
-        .map-content-area { padding: 30px; display: grid; grid-template-columns: 150px 1fr; gap: 30px; }
-        
-        .map-drawing-container { position: relative; width: 100%; border: 2px solid #333; border-radius: 8px; overflow: hidden; background: #000; }
-        .map-drawing-container img { width: 100%; height: auto; display: block; object-fit: cover; }
-        #tactical-canvas { position: absolute; top: 0; left: 0; z-index: 10; touch-action: none; }
-        .drawing-tools { display: flex; gap: 10px; margin-top: 10px; background: #1a1a1a; padding: 10px; border-radius: 8px; align-items: center; flex-wrap: wrap; }
-        .tool-btn { background: #333; color: #fff; border: 1px solid #444; padding: 5px 15px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; transition: 0.2s; }
-        .tool-btn.active { background: #ff5e00; border-color: #ff5e00; }
-        .tool-color { width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; transition: 0.2s; }
-        .tool-color.active { border-color: #fff; box-shadow: 0 0 5px #fff; }
-
         .stream-tabs { display: flex; gap: 10px; margin-bottom: 30px; justify-content: center; }
         .stream-tab-btn { background: #111; border: 1px solid #333; color: #888; padding: 12px 25px; font-weight: 800; border-radius: 4px; transition: 0.3s; font-size: 0.8rem; }
         .stream-tab-btn.active { background: #ff5e00; color: #fff; border-color: #ff5e00; box-shadow: 0 0 15px rgba(255, 94, 0, 0.3); }
@@ -139,11 +125,6 @@
         #chat-input:focus { border-color: #ff5e00; }
         .chat-send-btn { background: #ff5e00; color: #fff; border: none; padding: 0 15px; border-radius: 4px; font-weight: 800; font-size: 0.8rem; transition: background 0.3s; }
         .chat-send-btn:hover { background: #e65500; }
-        
-        #chat-messages::-webkit-scrollbar { width: 4px; }
-        #chat-messages::-webkit-scrollbar-track { background: #000; }
-        #chat-messages::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
-        #chat-messages::-webkit-scrollbar-thumb:hover { background: #ff5e00; }
 
         .discord-container { display: grid; grid-template-columns: 1fr 2fr; gap: 40px; background: #0d0d0d; padding: 40px; border-radius: 12px; border: 1px solid #222; align-items: center; }
 
@@ -190,7 +171,7 @@
         <div class="loading-bar-container">
             <div class="loading-bar"></div>
         </div>
-        <div class="loading-text-sub">INITIALIZING TACTICAL SYSTEM...</div>
+        <div class="loading-text-sub">INITIALIZING CLIX SYSTEM...</div>
     </div>
 
     <div class="live-status-bar">
@@ -242,6 +223,8 @@
             <li><a href="notice.html">NOTICE</a></li>
             <li><a href="board.html">BOARD</a></li>
             <li><a href="scrim.html">SCRIM</a></li>
+            <!-- TACTICS 메뉴 추가 됨 -->
+            <li><a href="tactics.html" style="color:#ff5e00 !important; font-weight:800;">TACTICS</a></li>
             <li><a href="#members">STATS</a></li>
             <li><a href="members.html">MEMBERS</a></li>
             <li id="nav-user-info" style="color:#ff5e00; font-size:10px; margin-left:20px; font-weight: bold;"></li>
@@ -257,71 +240,27 @@
         </div>
     </section>
 
+    <!-- 수정된 ABOUT 섹션 (지도 제거, 이미지 및 링크 추가) -->
     <section class="section" id="about">
         <div class="about-wrapper" data-aos="fade-up">
             <div class="about-intro-box">
                 <h3 style="color:#888; letter-spacing:2px;">Who We Are</h3>
                 <h2 style="font-size:3.5rem; margin:10px 0;">WE ARE THE<br><span style="color: #ff5e00;">CLIX CLAN</span></h2>
-                <p style="color:#aaa; margin-bottom:30px;">성숙한 매너와 체계적인 전술을 지향하는 배틀그라운드 성인 클랜입니다.</p>
+                <p style="color:#aaa; margin-bottom:30px;">성숙한 매너와 체계적인 전술을 지향하는 배틀그라운드 성인 클랜입니다.<br>최고의 팀워크를 위해 끊임없이 소통합니다.</p>
                 <div class="tag">매너 중요시</div><div class="tag">재미와 웃음</div>
+                <div style="margin-top: 40px;">
+                    <a href="tactics.html" class="auth-btn" style="text-decoration:none; display:inline-block; text-align:center; width:250px; padding:18px; border-radius:8px; box-shadow: 0 10px 20px rgba(255, 94, 0, 0.2);">작전반(TACTICS) 입장하기</a>
+                </div>
             </div>
-            <div class="map-dashboard">
-                <div class="map-nav">
-                    <button class="map-nav-btn active" onclick="showMap('erangel', this)">ERANGEL</button>
-                    <button class="map-nav-btn" onclick="showMap('miramar', this)">MIRAMAR</button>
-                </div>
-                <div class="map-content-area" id="map-content">
-                    <div>
-                        <div class="map-drawing-container">
-                            <img id="map-image" src="erangel.jpg" alt="Map" onerror="this.src='ERANGEL.JPG'">
-                            <canvas id="tactical-canvas"></canvas>
-                        </div>
-                        
-                        <!-- 전술 드로잉 툴 및 스탬프 아이콘 추가 -->
-                        <div class="drawing-tools">
-                            <!-- 그리기 툴 -->
-                            <div style="display:flex; gap:5px; border-right: 1px solid #333; padding-right: 10px;">
-                                <button class="tool-btn active" id="tool-pen" onclick="setTool('pen')">펜</button>
-                                <button class="tool-btn" id="tool-eraser" onclick="setTool('eraser')">지우개</button>
-                                <button class="tool-btn" style="color:#ff3333;" onclick="clearCanvas()">지우기</button>
-                            </div>
-                            <!-- 스탬프 툴 (새로 추가됨) -->
-                            <div style="display:flex; gap:5px;">
-                                <button class="tool-btn" id="tool-stamp-car" onclick="setTool('stamp-car')">🚙 차량</button>
-                                <button class="tool-btn" id="tool-stamp-enemy" onclick="setTool('stamp-enemy')">💀 적</button>
-                                <button class="tool-btn" id="tool-stamp-ping" onclick="setTool('stamp-ping')">📍 핑</button>
-                            </div>
-                            
-                            <div style="flex:1;"></div>
-                            
-                            <!-- 색상 선택 -->
-                            <div style="display:flex; gap:8px;">
-                                <div class="tool-color active" style="background:#ff3333;" onclick="setColor('#ff3333', this)"></div>
-                                <div class="tool-color" style="background:#33cc33;" onclick="setColor('#33cc33', this)"></div>
-                                <div class="tool-color" style="background:#3399ff;" onclick="setColor('#3399ff', this)"></div>
-                                <div class="tool-color" style="background:#ffffff;" onclick="setColor('#ffffff', this)"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="map-strategy-box" id="map-strategy-box">
-                        <h3 style="color:#ff5e00; margin-top:0;">ERANGEL 전략</h3>
-                        <p style="color:#888; font-size:0.9rem; line-height: 1.8;">
-                            - 주요 차량 스폰: 강남, 포친키. 1페 중앙 점령 추천.<br>
-                            - 외곽 강하: 밀타 파워, 노보 보트/차량 선점 필수.<br>
-                            - 밀베 자기장: 다리 검문 대비 및 해안가 시야 확보.<br>
-                            - 대도시: 시가전 시 옥상 선점 및 투척물 활용.<br>
-                            - 평야 교전: 볏짚과 해우소를 활용한 거점 방어.<br>
-                            - 기습 포인트: 해우소 지붕 위 점령으로 통행세 징수
-                        </p>
-                    </div>
-                </div>
+            <div class="about-image-box">
+                <!-- 이미지는 원하시는 팀 사진이나 로고로 언제든 교체 가능합니다 -->
+                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80" alt="CLIX CLAN">
             </div>
         </div>
     </section>
 
     <section class="section" id="hall-of-fame" style="background: #0d0d0d; border-top: 1px solid #222; border-bottom: 1px solid #222;">
         <h2 class="section-title" data-aos="fade-up">HALL OF FAME</h2>
-        
         <div class="mvp-container" data-aos="zoom-in" data-aos-delay="100">
             <div class="mvp-card">
                 <span class="mvp-tag">2026년 3월 MVP</span>
@@ -433,30 +372,17 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     
     <script>
-        // 로딩 화면 페이드아웃 (2.5초 후)
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                if(splash) splash.classList.add('hidden');
-            }, 2500); 
-        });
+        // 로딩 화면 페이드아웃
+        window.addEventListener('load', () => { setTimeout(() => { const splash = document.getElementById('splash-screen'); if(splash) splash.classList.add('hidden'); }, 2500); });
 
         AOS.init({ duration: 800, once: true, offset: 100, easing: 'ease-out-cubic' });
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAFSAu2aynX6YPiJEatWy9IQgWgUuTx8ds",
-            authDomain: "korclix.firebaseapp.com",
-            projectId: "korclix",
-            storageBucket: "korclix.firebasestorage.app",
-            messagingSenderId: "472792477536",
-            appId: "1:472792477536:web:14907e228c343b72fd7805"
-        };
+        const firebaseConfig = { apiKey: "AIzaSyAFSAu2aynX6YPiJEatWy9IQgWgUuTx8ds", authDomain: "korclix.firebaseapp.com", projectId: "korclix", storageBucket: "korclix.firebasestorage.app", messagingSenderId: "472792477536", appId: "1:472792477536:web:14907e228c343b72fd7805" };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        let isUserAdmin = false;
-        let userNick = "익명";
+        let isUserAdmin = false; let userNick = "익명";
 
         const PUBG_API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIyZDM0N2Y2MC0xNGJjLTAxM2YtMjljYy01MmJjZWJmMWUzMTYiLCJpc3MiOiJnYW1lbG9ja2VyIiwiaWF0IjoxNzc1NTcyMTk3LCJwdWIiOiJibHVlaG9sZSIsInRpdGxlIjoicHViZyIsImFwcCI6ImNsaXgtY2xhbi1zdGF0In0.uV5HbysN7Yb8MtfPNFWxxTz1o62sCS60thT5uy8MsUM"; 
         const PLATFORM = "steam"; 
@@ -472,24 +398,16 @@
         function initStatCards() {
             const grid = document.getElementById('stats-grid');
             let htmlContent = '';
-
             CLAN_MEMBERS.forEach(member => {
                 const nick = member.nickname;
                 const safeId = nick.toLowerCase().replace(/[^a-z0-9]/g, '');
-
-                if (!statsState[nick]) {
-                    statsState[nick] = {
-                        type: 'ranked', mode: 'squad',
-                        data: { ranked: { solo: null, duo: null, squad: null }, normal: { solo: null, duo: null, squad: null } }
-                    };
-                }
+                if (!statsState[nick]) { statsState[nick] = { type: 'ranked', mode: 'squad', data: { ranked: { solo: null, duo: null, squad: null }, normal: { solo: null, duo: null, squad: null } } }; }
 
                 htmlContent += `
                     <div class="stat-card" id="card-${safeId}">
                         <span class="rank-badge" id="badge-${safeId}">Loading...</span>
                         <div class="card-header">
-                            <h3 class="player-name">${nick}</h3>
-                            <span class="player-role">${member.role}</span>
+                            <h3 class="player-name">${nick}</h3><span class="player-role">${member.role}</span>
                         </div>
                         <div class="match-type-tabs">
                             <button class="match-type-btn active" onclick="changeMatchType('${nick}', 'ranked', this)">경쟁전</button>
@@ -506,7 +424,6 @@
                     </div>
                 `;
             });
-
             grid.innerHTML = htmlContent;
         }
 
@@ -514,545 +431,179 @@
             const cachedData = sessionStorage.getItem('pubg_stats_cache');
             const cachedTime = sessionStorage.getItem('pubg_stats_time');
             if (cachedData && cachedTime && (Date.now() - cachedTime < 5 * 60 * 1000)) {
-                statsState = JSON.parse(cachedData);
-                CLAN_MEMBERS.forEach(member => renderStats(member.nickname));
-                return;
+                statsState = JSON.parse(cachedData); CLAN_MEMBERS.forEach(member => renderStats(member.nickname)); return;
             }
-
             const headers = { "Authorization": `Bearer ${PUBG_API_KEY}`, "Accept": "application/vnd.api+json" };
             let currentSeason;
-
             try {
                 const seasonRes = await fetch(`https://api.pubg.com/shards/${PLATFORM}/seasons`, { headers });
-                if (!seasonRes.ok) {
-                    if (seasonRes.status === 429) throw new Error("API 요청 한도 초과(429). 1분 후 새로고침 하세요.");
-                    throw new Error(`시즌 응답 거부 (${seasonRes.status})`);
-                }
+                if (!seasonRes.ok) throw new Error("API 요청 한도 초과(429). 1분 후 새로고침 하세요.");
                 const seasonData = await seasonRes.json();
                 currentSeason = seasonData.data.find(s => s.attributes.isCurrentSeason).id;
 
                 const nicknames = CLAN_MEMBERS.map(m => m.nickname).join(',');
                 const playersRes = await fetch(`https://api.pubg.com/shards/${PLATFORM}/players?filter[playerNames]=${nicknames}`, { headers });
-                
-                if (!playersRes.ok) {
-                    if (playersRes.status === 429) throw new Error("API 한도 초과. 1분 대기 후 시도하세요.");
-                    throw new Error("유저 정보를 찾을 수 없습니다.");
-                }
+                if (!playersRes.ok) throw new Error("유저 정보를 찾을 수 없습니다.");
                 const playersData = await playersRes.json();
                 const accountMap = {};
                 playersData.data.forEach(p => { accountMap[p.attributes.name.toLowerCase()] = p.id; });
 
                 for (let member of CLAN_MEMBERS) {
-                    const nick = member.nickname;
-                    const safeId = nick.toLowerCase().replace(/[^a-z0-9]/g, '');
-                    const accountId = accountMap[nick.toLowerCase()];
-
-                    if(!accountId) {
-                        showErrorMsg(safeId, "닉네임/플랫폼 확인 필요");
-                        continue;
-                    }
-
+                    const nick = member.nickname; const safeId = nick.toLowerCase().replace(/[^a-z0-9]/g, ''); const accountId = accountMap[nick.toLowerCase()];
+                    if(!accountId) { showErrorMsg(safeId, "닉네임/플랫폼 확인 필요"); continue; }
                     try {
                         await new Promise(resolve => setTimeout(resolve, 500)); 
-
                         const rankedRes = await fetch(`https://api.pubg.com/shards/${PLATFORM}/players/${accountId}/seasons/${currentSeason}/ranked`, { headers });
-                        if(rankedRes.status === 429) throw new Error("요청 폭주(429). 1분 후 시도 요망");
-                        let rModes = {};
-                        if(rankedRes.ok) { const rData = await rankedRes.json(); rModes = rData.data.attributes.rankedGameModeStats || {}; }
-                        
+                        let rModes = {}; if(rankedRes.ok) { const rData = await rankedRes.json(); rModes = rData.data.attributes.rankedGameModeStats || {}; }
                         statsState[nick].data.ranked.solo = getBestMode(rModes, 'solo', 'solo-fpp');
                         statsState[nick].data.ranked.duo = getBestMode(rModes, 'duo', 'duo-fpp');
                         statsState[nick].data.ranked.squad = getBestMode(rModes, 'squad', 'squad-fpp');
 
                         await new Promise(resolve => setTimeout(resolve, 300)); 
                         const normalRes = await fetch(`https://api.pubg.com/shards/${PLATFORM}/players/${accountId}/seasons/${currentSeason}`, { headers });
-                        let nModes = {};
-                        if(normalRes.ok) { const nData = await normalRes.json(); nModes = nData.data.attributes.gameModeStats || {}; }
-                        
+                        let nModes = {}; if(normalRes.ok) { const nData = await normalRes.json(); nModes = nData.data.attributes.gameModeStats || {}; }
                         statsState[nick].data.normal.solo = getBestMode(nModes, 'solo', 'solo-fpp');
                         statsState[nick].data.normal.duo = getBestMode(nModes, 'duo', 'duo-fpp');
                         statsState[nick].data.normal.squad = getBestMode(nModes, 'squad', 'squad-fpp');
 
                         renderStats(nick);
-
-                    } catch (err) {
-                        showErrorMsg(safeId, err.message);
-                    }
+                    } catch (err) { showErrorMsg(safeId, err.message); }
                 }
-
-                sessionStorage.setItem('pubg_stats_cache', JSON.stringify(statsState));
-                sessionStorage.setItem('pubg_stats_time', Date.now().toString());
-
-            } catch (error) {
-                CLAN_MEMBERS.forEach(member => {
-                    const safeId = member.nickname.toLowerCase().replace(/[^a-z0-9]/g, '');
-                    showErrorMsg(safeId, error.message);
-                });
-            }
+                sessionStorage.setItem('pubg_stats_cache', JSON.stringify(statsState)); sessionStorage.setItem('pubg_stats_time', Date.now().toString());
+            } catch (error) { CLAN_MEMBERS.forEach(member => { const safeId = member.nickname.toLowerCase().replace(/[^a-z0-9]/g, ''); showErrorMsg(safeId, error.message); }); }
         }
 
         function showErrorMsg(safeId, msg) {
-            const statsContainer = document.getElementById(`stats-${safeId}`);
-            const badgeContainer = document.getElementById(`badge-${safeId}`);
+            const statsContainer = document.getElementById(`stats-${safeId}`); const badgeContainer = document.getElementById(`badge-${safeId}`);
             if(statsContainer) statsContainer.innerHTML = `<div class="loading-text" style="color:#ff3333; animation:none; line-height:1.4; padding-top:40px;">API 에러<br><span style="font-size:0.65rem; color:#aaa;">${msg}</span></div>`;
             if(badgeContainer) { badgeContainer.innerText = "ERROR"; badgeContainer.style.color = "#ff3333"; badgeContainer.style.borderColor = "#ff3333"; }
         }
 
         function getBestMode(modes, tppKey, fppKey) {
-            const tpp = modes[tppKey] || { roundsPlayed: 0 };
-            const fpp = modes[fppKey] || { roundsPlayed: 0 };
+            const tpp = modes[tppKey] || { roundsPlayed: 0 }; const fpp = modes[fppKey] || { roundsPlayed: 0 };
             return (tpp.roundsPlayed >= fpp.roundsPlayed) ? tpp : fpp;
         }
 
         function changeMatchType(nick, type, btn) {
-            statsState[nick].type = type;
-            const safeId = nick.toLowerCase().replace(/[^a-z0-9]/g, '');
-            const card = document.getElementById(`card-${safeId}`);
-            card.querySelectorAll('.match-type-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderStats(nick);
+            statsState[nick].type = type; const safeId = nick.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const card = document.getElementById(`card-${safeId}`); card.querySelectorAll('.match-type-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); renderStats(nick);
         }
 
         function changeTeamMode(nick, mode, btn) {
-            statsState[nick].mode = mode;
-            const safeId = nick.toLowerCase().replace(/[^a-z0-9]/g, '');
-            const card = document.getElementById(`card-${safeId}`);
-            card.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderStats(nick);
+            statsState[nick].mode = mode; const safeId = nick.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const card = document.getElementById(`card-${safeId}`); card.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); renderStats(nick);
         }
 
         function renderStats(nick) {
-            const safeId = nick.toLowerCase().replace(/[^a-z0-9]/g, '');
-            const state = statsState[nick];
-            const currentData = state.data[state.type][state.mode];
-            const statsContainer = document.getElementById(`stats-${safeId}`);
-            const badgeContainer = document.getElementById(`badge-${safeId}`);
+            const safeId = nick.toLowerCase().replace(/[^a-z0-9]/g, ''); const state = statsState[nick]; const currentData = state.data[state.type][state.mode];
+            const statsContainer = document.getElementById(`stats-${safeId}`); const badgeContainer = document.getElementById(`badge-${safeId}`);
 
             if (!currentData || currentData.roundsPlayed === 0) {
-                badgeContainer.innerText = state.type === 'ranked' ? "Unranked" : "No Record";
-                badgeContainer.style.color = "#888";
-                badgeContainer.style.borderColor = "#888";
-                statsContainer.innerHTML = `<div class="loading-text" style="animation:none; padding-top:40px;">해당 모드의 플레이 기록이 없습니다.</div>`;
-                return;
+                badgeContainer.innerText = state.type === 'ranked' ? "Unranked" : "No Record"; badgeContainer.style.color = "#888"; badgeContainer.style.borderColor = "#888";
+                statsContainer.innerHTML = `<div class="loading-text" style="animation:none; padding-top:40px;">해당 모드의 플레이 기록이 없습니다.</div>`; return;
             }
 
-            const deaths = currentData.roundsPlayed - currentData.wins;
-            const kd = deaths === 0 ? currentData.kills : (currentData.kills / deaths); 
-            const avgDmg = currentData.damageDealt / currentData.roundsPlayed;
-            const winRate = ((currentData.wins / currentData.roundsPlayed) * 100).toFixed(1);
+            const deaths = currentData.roundsPlayed - currentData.wins; const kd = deaths === 0 ? currentData.kills : (currentData.kills / deaths); 
+            const avgDmg = currentData.damageDealt / currentData.roundsPlayed; const winRate = ((currentData.wins / currentData.roundsPlayed) * 100).toFixed(1);
 
             if (state.type === 'ranked') {
-                const rp = currentData.currentRankPoint || 0;
-                const tierName = currentData.currentTier ? currentData.currentTier.tier : "Unranked";
-                const subTier = currentData.currentTier ? currentData.currentTier.subTier : "";
-                
+                const rp = currentData.currentRankPoint || 0; const tierName = currentData.currentTier ? currentData.currentTier.tier : "Unranked"; const subTier = currentData.currentTier ? currentData.currentTier.subTier : "";
                 let tierColor = "#fff";
-                if (tierName === "Bronze") tierColor = "#cd7f32";
-                else if (tierName === "Silver") tierColor = "#c0c0c0";
-                else if (tierName === "Gold") tierColor = "#ffcc00";
-                else if (tierName === "Platinum") tierColor = "#4ee29d";
-                else if (tierName === "Diamond") tierColor = "#00d4ff";
-                else if (tierName === "Master") tierColor = "#ff5e00";
+                if (tierName === "Bronze") tierColor = "#cd7f32"; else if (tierName === "Silver") tierColor = "#c0c0c0"; else if (tierName === "Gold") tierColor = "#ffcc00";
+                else if (tierName === "Platinum") tierColor = "#4ee29d"; else if (tierName === "Diamond") tierColor = "#00d4ff"; else if (tierName === "Master") tierColor = "#ff5e00";
 
-                badgeContainer.innerText = `${tierName} ${subTier}`;
-                badgeContainer.style.color = tierColor;
-                badgeContainer.style.borderColor = tierColor;
-
-                statsContainer.innerHTML = `
-                    <div class="data-item"><span class="data-label">Rank Points</span><span class="data-value">${rp}</span></div>
-                    <div class="data-item"><span class="data-label">K/D</span><span class="data-value">${kd.toFixed(2)}</span></div>
-                    <div class="data-item"><span class="data-label">Avg Damage</span><span class="data-value">${Math.round(avgDmg)}</span></div>
-                    <div class="data-item"><span class="data-label">Win Rate</span><span class="data-value">${winRate}<span class="data-unit">%</span></span></div>
-                `;
+                badgeContainer.innerText = `${tierName} ${subTier}`; badgeContainer.style.color = tierColor; badgeContainer.style.borderColor = tierColor;
+                statsContainer.innerHTML = `<div class="data-item"><span class="data-label">Rank Points</span><span class="data-value">${rp}</span></div><div class="data-item"><span class="data-label">K/D</span><span class="data-value">${kd.toFixed(2)}</span></div><div class="data-item"><span class="data-label">Avg Damage</span><span class="data-value">${Math.round(avgDmg)}</span></div><div class="data-item"><span class="data-label">Win Rate</span><span class="data-value">${winRate}<span class="data-unit">%</span></span></div>`;
             } else {
-                badgeContainer.innerText = "Casual";
-                badgeContainer.style.color = "#ccc";
-                badgeContainer.style.borderColor = "#ccc";
-
-                const top10s = currentData.top10s || 0;
-                const top10Rate = ((top10s / currentData.roundsPlayed) * 100).toFixed(1);
-
-                statsContainer.innerHTML = `
-                    <div class="data-item"><span class="data-label">Win Rate</span><span class="data-value">${winRate}<span class="data-unit">%</span></span></div>
-                    <div class="data-item"><span class="data-label">K/D</span><span class="data-value">${kd.toFixed(2)}</span></div>
-                    <div class="data-item"><span class="data-label">Avg Damage</span><span class="data-value">${Math.round(avgDmg)}</span></div>
-                    <div class="data-item"><span class="data-label">Top 10</span><span class="data-value">${top10Rate}<span class="data-unit">%</span></span></div>
-                `;
+                badgeContainer.innerText = "Casual"; badgeContainer.style.color = "#ccc"; badgeContainer.style.borderColor = "#ccc";
+                const top10s = currentData.top10s || 0; const top10Rate = ((top10s / currentData.roundsPlayed) * 100).toFixed(1);
+                statsContainer.innerHTML = `<div class="data-item"><span class="data-label">Win Rate</span><span class="data-value">${winRate}<span class="data-unit">%</span></span></div><div class="data-item"><span class="data-label">K/D</span><span class="data-value">${kd.toFixed(2)}</span></div><div class="data-item"><span class="data-label">Avg Damage</span><span class="data-value">${Math.round(avgDmg)}</span></div><div class="data-item"><span class="data-label">Top 10</span><span class="data-value">${top10Rate}<span class="data-unit">%</span></span></div>`;
             }
         }
-
-        let canvas, ctx;
-        let isDrawing = false;
-        let currentTool = 'pen';
-        let currentColor = '#ff3333';
-
-        function initCanvas() {
-            canvas = document.getElementById('tactical-canvas');
-            const img = document.getElementById('map-image');
-            if(!canvas || !img) return;
-            ctx = canvas.getContext('2d');
-            
-            canvas.width = img.clientWidth;
-            canvas.height = img.clientHeight;
-            
-            // 기존 이벤트에 스탬프 기능 분기 추가
-            canvas.addEventListener('mousedown', startPosition);
-            canvas.addEventListener('mouseup', endPosition);
-            canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('mouseout', endPosition);
-            
-            canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startPosition(e.touches[0]); }, {passive: false});
-            canvas.addEventListener('touchend', endPosition);
-            canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e.touches[0]); }, {passive: false});
-        }
-
-        window.addEventListener('resize', () => {
-            const img = document.getElementById('map-image');
-            if(img && img.complete) initCanvas();
-        });
 
         function initParticles() {
-            const particleCanvas = document.getElementById('particles-canvas');
-            if (!particleCanvas) return;
-            const pCtx = particleCanvas.getContext('2d');
-            particleCanvas.width = window.innerWidth;
-            particleCanvas.height = window.innerHeight;
-
-            const particlesArray = [];
-            const numberOfParticles = 70;
-
+            const particleCanvas = document.getElementById('particles-canvas'); if (!particleCanvas) return;
+            const pCtx = particleCanvas.getContext('2d'); particleCanvas.width = window.innerWidth; particleCanvas.height = window.innerHeight;
+            const particlesArray = []; const numberOfParticles = 70;
             class Particle {
-                constructor() {
-                    this.x = Math.random() * particleCanvas.width;
-                    this.y = particleCanvas.height + Math.random() * particleCanvas.height;
-                    this.size = Math.random() * 2 + 0.5; 
-                    this.speedX = Math.random() * 1.5 - 0.75; 
-                    this.speedY = Math.random() * -2 - 1; 
-                    this.opacity = Math.random();
-                }
-                update() {
-                    this.x += this.speedX;
-                    this.y += this.speedY;
-                    if (this.y < 0) { 
-                        this.y = particleCanvas.height;
-                        this.x = Math.random() * particleCanvas.width;
-                    }
-                }
-                draw() {
-                    pCtx.fillStyle = `rgba(255, 94, 0, ${this.opacity})`;
-                    pCtx.beginPath();
-                    pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    pCtx.fill();
-                }
+                constructor() { this.x = Math.random() * particleCanvas.width; this.y = particleCanvas.height + Math.random() * particleCanvas.height; this.size = Math.random() * 2 + 0.5; this.speedX = Math.random() * 1.5 - 0.75; this.speedY = Math.random() * -2 - 1; this.opacity = Math.random(); }
+                update() { this.x += this.speedX; this.y += this.speedY; if (this.y < 0) { this.y = particleCanvas.height; this.x = Math.random() * particleCanvas.width; } }
+                draw() { pCtx.fillStyle = `rgba(255, 94, 0, ${this.opacity})`; pCtx.beginPath(); pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2); pCtx.fill(); }
             }
-
             for (let i = 0; i < numberOfParticles; i++) particlesArray.push(new Particle());
-
-            function animateParticles() {
-                pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
-                particlesArray.forEach(p => { p.update(); p.draw(); });
-                requestAnimationFrame(animateParticles);
-            }
+            function animateParticles() { pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height); particlesArray.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
             animateParticles();
-
-            window.addEventListener('resize', () => {
-                particleCanvas.width = window.innerWidth;
-                particleCanvas.height = window.innerHeight;
-            });
+            window.addEventListener('resize', () => { particleCanvas.width = window.innerWidth; particleCanvas.height = window.innerHeight; });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             const savedEmail = localStorage.getItem('clix_saved_email');
-            if (savedEmail) {
-                document.getElementById('auth-email').value = savedEmail;
-                document.getElementById('remember-email').checked = true;
-            }
-            
-            const img = document.getElementById('map-image');
-            if(img) {
-                if(img.complete) initCanvas(); 
-                else img.onload = initCanvas;
-            }
-
-            initStatCards();
-            fetchAllPubgStats();
-            initParticles();
+            if (savedEmail) { document.getElementById('auth-email').value = savedEmail; document.getElementById('remember-email').checked = true; }
+            initStatCards(); fetchAllPubgStats(); initParticles();
         });
 
-        function getMousePos(evt) {
-            const rect = canvas.getBoundingClientRect();
-            return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
-        }
-
-        // 마우스를 클릭했을 때 (그리기 시작 OR 스탬프 찍기)
-        function startPosition(e) { 
-            if (currentTool.startsWith('stamp-')) {
-                drawStamp(e);
-            } else {
-                isDrawing = true; 
-                draw(e); 
-            }
-        }
-        function endPosition() { isDrawing = false; ctx.beginPath(); }
-        
-        // 펜, 지우개 그리기 로직
-        function draw(e) {
-            if (!isDrawing) return;
-            const pos = getMousePos(e);
-
-            ctx.lineWidth = currentTool === 'eraser' ? 20 : 3;
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = currentTool === 'eraser' ? 'rgba(0,0,0,1)' : currentColor;
-            ctx.globalCompositeOperation = currentTool === 'eraser' ? 'destination-out' : 'source-over';
-
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y);
-        }
-
-        // 스탬프(아이콘) 찍기 로직 추가
-        function drawStamp(e) {
-            const pos = getMousePos(e);
-            ctx.font = '28px Arial';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.globalCompositeOperation = 'source-over';
-            
-            // 살짝의 그림자 효과로 아이콘이 맵에서 잘 보이게 처리
-            ctx.shadowColor = 'rgba(0,0,0,0.8)';
-            ctx.shadowBlur = 5;
-
-            let stampIcon = '';
-            if (currentTool === 'stamp-car') stampIcon = '🚙';
-            if (currentTool === 'stamp-enemy') stampIcon = '💀';
-            if (currentTool === 'stamp-ping') stampIcon = '📍';
-
-            ctx.fillText(stampIcon, pos.x, pos.y);
-            ctx.shadowBlur = 0; // 그림자 초기화
-        }
-
-        // 툴 선택 변경 (스탬프 버튼 포함)
-        function setTool(tool) {
-            currentTool = tool;
-            
-            // 모든 툴 버튼의 active 클래스 제거
-            document.getElementById('tool-pen').classList.remove('active');
-            document.getElementById('tool-eraser').classList.remove('active');
-            document.getElementById('tool-stamp-car').classList.remove('active');
-            document.getElementById('tool-stamp-enemy').classList.remove('active');
-            document.getElementById('tool-stamp-ping').classList.remove('active');
-            
-            // 선택된 툴 버튼 활성화
-            const activeBtn = document.getElementById('tool-' + tool);
-            if(activeBtn) activeBtn.classList.add('active');
-        }
-
-        function setColor(color, element) {
-            currentColor = color;
-            setTool('pen'); // 색상을 누르면 자동으로 펜 모드로 변경
-            document.querySelectorAll('.tool-color').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
-        }
-
-        function clearCanvas() {
-            if (!ctx || !canvas) return;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-
         auth.onAuthStateChanged((user) => {
-            const overlay = document.getElementById('lock-overlay');
-            const formScreen = document.getElementById('auth-form-screen');
-            const verifyScreen = document.getElementById('verify-screen');
-            
+            const overlay = document.getElementById('lock-overlay'); const formScreen = document.getElementById('auth-form-screen'); const verifyScreen = document.getElementById('verify-screen');
             if (user) {
                 if (user.emailVerified) {
                     overlay.style.display = 'none';
                     db.collection("users").doc(user.uid).get().then((doc) => {
-                        if (doc.exists) {
-                            const data = doc.data();
-                            userNick = data.nickname || user.email.split('@')[0];
-                            isUserAdmin = data.isAdmin === true;
-                        } else {
-                            userNick = user.email.split('@')[0];
-                            isUserAdmin = false;
-                        }
-                        document.getElementById('nav-user-info').innerText = userNick + "님 반갑습니다";
-                        document.getElementById('clear-all-btn').style.display = isUserAdmin ? 'block' : 'none';
-                        loadMessages();
+                        if (doc.exists) { const data = doc.data(); userNick = data.nickname || user.email.split('@')[0]; isUserAdmin = data.isAdmin === true; } 
+                        else { userNick = user.email.split('@')[0]; isUserAdmin = false; }
+                        document.getElementById('nav-user-info').innerText = userNick + "님 반갑습니다"; document.getElementById('clear-all-btn').style.display = isUserAdmin ? 'block' : 'none'; loadMessages();
                     });
-                } else {
-                    overlay.style.display = 'flex';
-                    formScreen.style.display = 'none';
-                    verifyScreen.style.display = 'block';
-                }
-            } else {
-                isUserAdmin = false;
-                userNick = "익명";
-                overlay.style.display = 'flex';
-                formScreen.style.display = 'block';
-                verifyScreen.style.display = 'none';
-            }
+                } else { overlay.style.display = 'flex'; formScreen.style.display = 'none'; verifyScreen.style.display = 'block'; }
+            } else { isUserAdmin = false; userNick = "익명"; overlay.style.display = 'flex'; formScreen.style.display = 'block'; verifyScreen.style.display = 'none'; }
         });
 
-        function getNicknameColor(nickname) {
-            const colors = ['#ff5e00', '#4ee29d', '#00d4ff', '#ffcc00', '#ff4e50', '#8e44ad', '#3498db', '#f1c40f'];
-            let hash = 0;
-            for (let i = 0; i < nickname.length; i++) { hash = nickname.charCodeAt(i) + ((hash << 5) - hash); }
-            return colors[Math.abs(hash) % colors.length];
-        }
+        function getNicknameColor(nickname) { const colors = ['#ff5e00', '#4ee29d', '#00d4ff', '#ffcc00', '#ff4e50', '#8e44ad', '#3498db', '#f1c40f']; let hash = 0; for (let i = 0; i < nickname.length; i++) { hash = nickname.charCodeAt(i) + ((hash << 5) - hash); } return colors[Math.abs(hash) % colors.length]; }
 
         function toggleMusic() {
-            const music = document.getElementById('bgm');
-            const playBtn = document.querySelector('.play-toggle');
-            const playIcon = document.getElementById('play-icon');
-            const status = document.getElementById('music-status');
-
-            if (music.paused) {
-                music.play().then(() => {
-                    playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
-                    status.innerText = "ON"; status.style.color = "#ff5e00";
-                    playBtn.classList.add('music-on');
-                }).catch(e => alert("전장 음원(bgm.mp3)이 준비되지 않았습니다."));
-            } else {
-                music.pause();
-                playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
-                status.innerText = "OFF"; status.style.color = "#444";
-                playBtn.classList.remove('music-on');
-            }
+            const music = document.getElementById('bgm'); const playBtn = document.querySelector('.play-toggle'); const playIcon = document.getElementById('play-icon'); const status = document.getElementById('music-status');
+            if (music.paused) { music.play().then(() => { playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; status.innerText = "ON"; status.style.color = "#ff5e00"; playBtn.classList.add('music-on'); }).catch(e => alert("전장 음원(bgm.mp3)이 준비되지 않았습니다.")); } 
+            else { music.pause(); playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; status.innerText = "OFF"; status.style.color = "#444"; playBtn.classList.remove('music-on'); }
         }
 
-        function deleteMessage(msgId) {
-            if (!confirm("이 메시지를 삭제하시겠습니까?")) return;
-            db.collection("chats").doc(msgId).delete().catch(err => alert("삭제 실패: " + err.message));
-        }
+        function deleteMessage(msgId) { if (!confirm("이 메시지를 삭제하시겠습니까?")) return; db.collection("chats").doc(msgId).delete().catch(err => alert("삭제 실패: " + err.message)); }
 
-        async function clearAllChats() {
-            if (!isUserAdmin) return alert("권한이 없습니다.");
-            if (!confirm("모든 채팅 기록을 삭제하시겠습니까? (복구 불가)")) return;
-            try {
-                const snapshot = await db.collection("chats").get();
-                const batch = db.batch();
-                snapshot.docs.forEach((doc) => { batch.delete(doc.ref); });
-                await batch.commit();
-                alert("전체 채팅이 초기화되었습니다.");
-            } catch (err) { alert("삭제 중 오류 발생: " + err.message); }
-        }
+        async function clearAllChats() { if (!isUserAdmin) return alert("권한이 없습니다."); if (!confirm("모든 채팅 기록을 삭제하시겠습니까? (복구 불가)")) return; try { const snapshot = await db.collection("chats").get(); const batch = db.batch(); snapshot.docs.forEach((doc) => { batch.delete(doc.ref); }); await batch.commit(); alert("전체 채팅이 초기화되었습니다."); } catch (err) { alert("삭제 중 오류 발생: " + err.message); } }
 
-        function toggleAuthMode() {
-            let btn = document.getElementById('auth-main-btn');
-            let isLoginMode = btn.innerText === "로그인";
-            document.getElementById('auth-title').innerText = isLoginMode ? "CLIX SIGN UP" : "CLIX MEMBERS ONLY";
-            btn.innerText = isLoginMode ? "회원가입" : "로그인";
-            document.getElementById('auth-toggle-text').innerText = isLoginMode ? "이미 계정이 있나요? 로그인" : "계정이 없으신가요? 회원가입";
-            document.getElementById('signup-extra-fields').style.display = isLoginMode ? "block" : "none";
-            document.getElementById('login-options').style.display = isLoginMode ? "none" : "flex";
-        }
+        function toggleAuthMode() { let btn = document.getElementById('auth-main-btn'); let isLoginMode = btn.innerText === "로그인"; document.getElementById('auth-title').innerText = isLoginMode ? "CLIX SIGN UP" : "CLIX MEMBERS ONLY"; btn.innerText = isLoginMode ? "회원가입" : "로그인"; document.getElementById('auth-toggle-text').innerText = isLoginMode ? "이미 계정이 있나요? 로그인" : "계정이 없으신가요? 회원가입"; document.getElementById('signup-extra-fields').style.display = isLoginMode ? "block" : "none"; document.getElementById('login-options').style.display = isLoginMode ? "none" : "flex"; }
 
         function handleAuth() {
-            const email = document.getElementById('auth-email').value.trim();
-            const password = document.getElementById('auth-password').value;
-            const isLoginMode = document.getElementById('auth-main-btn').innerText === "로그인";
-            
+            const email = document.getElementById('auth-email').value.trim(); const password = document.getElementById('auth-password').value; const isLoginMode = document.getElementById('auth-main-btn').innerText === "로그인";
             if (isLoginMode) {
-                const keepLoggedIn = document.getElementById('keep-logged-in').checked;
-                const rememberEmail = document.getElementById('remember-email').checked;
-                const persistence = keepLoggedIn ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION;
-                
-                if (rememberEmail) localStorage.setItem('clix_saved_email', email);
-                else localStorage.removeItem('clix_saved_email');
-
-                auth.setPersistence(persistence)
-                    .then(() => auth.signInWithEmailAndPassword(email, password))
-                    .catch(err => alert("로그인 오류: " + err.message));
+                const keepLoggedIn = document.getElementById('keep-logged-in').checked; const rememberEmail = document.getElementById('remember-email').checked; const persistence = keepLoggedIn ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION;
+                if (rememberEmail) localStorage.setItem('clix_saved_email', email); else localStorage.removeItem('clix_saved_email');
+                auth.setPersistence(persistence).then(() => auth.signInWithEmailAndPassword(email, password)).catch(err => alert("로그인 오류: " + err.message));
             } else {
-                const nickname = document.getElementById('auth-nickname').value;
-                const age = document.getElementById('auth-age').value;
-                if(!nickname || !age) return alert("추가 정보를 입력하세요.");
-                auth.createUserWithEmailAndPassword(email, password).then((res) => {
-                    res.user.sendEmailVerification();
-                    return db.collection("users").doc(res.user.uid).set({ nickname: nickname, age: age, email: email, joinedAt: firebase.firestore.FieldValue.serverTimestamp() });
-                }).then(() => alert("인증 메일을 확인하세요!")).catch(err => alert("가입 실패: " + err.message));
+                const nickname = document.getElementById('auth-nickname').value; const age = document.getElementById('auth-age').value; if(!nickname || !age) return alert("추가 정보를 입력하세요.");
+                auth.createUserWithEmailAndPassword(email, password).then((res) => { res.user.sendEmailVerification(); return db.collection("users").doc(res.user.uid).set({ nickname: nickname, age: age, email: email, joinedAt: firebase.firestore.FieldValue.serverTimestamp() }); }).then(() => alert("인증 메일을 확인하세요!")).catch(err => alert("가입 실패: " + err.message));
             }
         }
 
         function resendEmail() { auth.currentUser.sendEmailVerification().then(() => alert("재발송 완료")); }
         function logout() { if(confirm("로그아웃 하시겠습니까?")) auth.signOut(); }
 
-        function showMap(mapName, btn) {
-            const btns = document.querySelectorAll('.map-nav-btn'); 
-            btns.forEach(b => b.classList.remove('active')); 
-            btn.classList.add('active');
-            
-            const data = { 
-                'erangel': ['erangel.jpg', 'ERANGEL 전략', '- 주요 차량 스폰: 강남, 포친키. 1페 중앙 점령 추천<br>- 외곽 강하: 밀타 파워 보트 필수<br>- 밀베 자기장: 다리 검문 대비 및 해안가 시야 확보<br>- 대도시: 시가전 시 옥상 선점 및 투척물 활용<br>- 평야 교전: 볏짚과 해우소 활용 거점 방어<br>- 기습 포인트: 해우소 지붕 위 점령 통행세 징수'],
-                'miramar': ['miramar.jpg', 'MIRAMAR 전략', '- 고지대 능선 점령 필수 시야 확보가 핵심<br>- 무기 구성: DMR/SR 장거리 무기 필수<br>- 차량: 픽업트럭 확보 및 능선 하단 회전<br>- 도심 진입: 페카도, 로스 레오네스 창문/옥상 클리어링<br>- 지형 활용: 분지 지형 굴곡을 활용한 하이딩 및 기습']
-            };
-            const m = data[mapName];
-            
-            const img = document.getElementById('map-image');
-            img.src = m[0];
-            img.onerror = function() { this.src = m[0].toUpperCase(); };
-            img.onload = initCanvas; 
-
-            document.getElementById('map-strategy-box').innerHTML = `<h3 style="color:#ff5e00; margin-top:0;">${m[1]}</h3><p style="color:#888; font-size:0.9rem; line-height: 1.8;">${m[2]}</p>`;
-            clearCanvas();
-        }
-
-        function changeStream(platform, id, btn) {
-            const iframe = document.getElementById('live-iframe');
-            const btns = document.querySelectorAll('.stream-tab-btn');
-            btns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            if (platform === 'chzzk') iframe.src = `https://chzzk.naver.com/live/${id}/embed`;
-            else if (platform === 'soop') iframe.src = `https://play.soop.st/embed/station/${id}`;
-            else if (platform === 'youtube') iframe.src = `https://www.youtube.com/embed/live_stream?channel=${id}&autoplay=1&mute=1`;
-        }
+        function changeStream(platform, id, btn) { const iframe = document.getElementById('live-iframe'); const btns = document.querySelectorAll('.stream-tab-btn'); btns.forEach(b => b.classList.remove('active')); btn.classList.add('active'); if (platform === 'chzzk') iframe.src = `https://chzzk.naver.com/live/${id}/embed`; else if (platform === 'soop') iframe.src = `https://play.soop.st/embed/station/${id}`; else if (platform === 'youtube') iframe.src = `https://www.youtube.com/embed/live_stream?channel=${id}&autoplay=1&mute=1`; }
 
         function loadMessages() {
             const chatBox = document.getElementById('chat-messages');
-            
             db.collection("chats").orderBy("createdAt", "asc").limitToLast(50).onSnapshot((snapshot) => {
                 chatBox.innerHTML = "";
                 snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const msgId = doc.id;
-                    const div = document.createElement('div');
-                    div.className = 'chat-msg-item';
-                    
+                    const data = doc.data(); const msgId = doc.id; const div = document.createElement('div'); div.className = 'chat-msg-item';
                     const deleteBtn = isUserAdmin ? `<span onclick="deleteMessage('${msgId}')" style="color:#ff3333; cursor:pointer; float:right; font-size:10px; font-weight:bold;">[X]</span>` : "";
-                    const nickColor = getNicknameColor(data.nickname);
-
-                    let badge = '🔰'; 
-                    if (data.nickname === 'CLX_0dB' || data.isAdmin) {
-                        badge = '👑'; 
-                    } else if (data.nickname.startsWith('CLX_') || CLAN_MEMBERS.some(m => m.nickname === data.nickname)) {
-                        badge = '🔫'; 
-                    }
-
-                    div.innerHTML = `${deleteBtn}
-                        <span class="chat-nickname" style="color: ${nickColor};">
-                            <span class="chat-badge">${badge}</span> ${data.nickname}
-                        </span>
-                        <div class="chat-text" style="color: #eee;">${data.text}</div>`;
+                    const nickColor = getNicknameColor(data.nickname); let badge = '🔰'; 
+                    if (data.nickname === 'CLX_0dB' || data.isAdmin) badge = '👑'; else if (data.nickname.startsWith('CLX_') || CLAN_MEMBERS.some(m => m.nickname === data.nickname)) badge = '🔫'; 
+                    div.innerHTML = `${deleteBtn}<span class="chat-nickname" style="color: ${nickColor};"><span class="chat-badge">${badge}</span> ${data.nickname}</span><div class="chat-text" style="color: #eee;">${data.text}</div>`;
                     chatBox.appendChild(div);
                 });
                 chatBox.scrollTop = chatBox.scrollHeight;
             });
         }
 
-        function sendMessage() {
-            const user = auth.currentUser;
-            const input = document.getElementById('chat-input');
-            const message = input.value.trim();
-            if (!user) return alert("로그인 후 이용 가능합니다.");
-            if (!message) return;
-            
-            db.collection("chats").add({ nickname: userNick, text: message, createdAt: firebase.firestore.FieldValue.serverTimestamp() })
-            .then(() => { input.value = ""; });
-        }
-
+        function sendMessage() { const user = auth.currentUser; const input = document.getElementById('chat-input'); const message = input.value.trim(); if (!user) return alert("로그인 후 이용 가능합니다."); if (!message) return; db.collection("chats").add({ nickname: userNick, text: message, createdAt: firebase.firestore.FieldValue.serverTimestamp() }).then(() => { input.value = ""; }); }
         document.getElementById('chat-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
     </script>
 </body>
