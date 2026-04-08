@@ -43,14 +43,13 @@
         .logout-link { margin-left: 10px; font-size: 10px; color: #ff3333 !important; cursor: pointer; border: 1px solid #444; padding: 5px 10px; border-radius: 4px; font-weight: bold; }
         .logout-link:hover { background: rgba(255,255,255,0.1); }
 
-        /* --- HERO 섹션 CSS 수정 (배경 이미지 꽉 차게 + 그리드 패턴) --- */
+        /* --- HERO 섹션 CSS (배경 이미지 꽉 차게 + 그리드 패턴) --- */
         .hero { 
             position: relative; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; 
             background: linear-gradient(to bottom, rgba(10, 10, 10, 0.7), #0a0a0a), 
                         url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1920&q=80'); 
             background-size: cover; background-position: center; background-attachment: fixed;
         }
-        /* 사이버틱한 그리드 무늬 오버레이 */
         .hero::before {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
@@ -129,14 +128,13 @@
 
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-top: 50px; }
         
-        /* --- 스탯 카드 CSS 수정 (멀미나는 3D 효과 제거, 고급스러운 플랫 글로우 효과 적용) --- */
+        /* --- 스탯 카드 CSS (플랫 글로우 효과) --- */
         .stat-card { 
             background: rgba(20, 20, 20, 0.95); border: 1px solid #222; border-radius: 12px; padding: 35px; 
             position: relative; overflow: hidden;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
         }
-        /* 호버 시 부드럽게 떠오르며 주황색 네온 빛이 감돌도록 변경 */
         .stat-card:hover { 
             transform: translateY(-8px); 
             border-color: #ff5e00; 
@@ -230,7 +228,6 @@
         </ul>
     </nav>
 
-    <!-- 배경 비디오 제거, 안정적인 이미지와 그리드 무늬로 대체 -->
     <section class="hero" id="home">
         <div class="hero-content">
             <h1 class="glitch" data-text="CLIX">CLIX</h1>
@@ -407,50 +404,78 @@
             grid.innerHTML = htmlContent;
         }
 
+        // --- 무한 로딩 방지 및 에러 표시 로직이 추가된 API 호출 함수 ---
         async function fetchAllPubgStats() {
             const headers = { "Authorization": `Bearer ${PUBG_API_KEY}`, "Accept": "application/vnd.api+json" };
+            let currentSeason;
 
             try {
+                // 1. 현재 시즌 정보 가져오기 (실패 시 전체 카드에 에러 표시)
                 const seasonRes = await fetch(`https://api.pubg.com/shards/${PLATFORM}/seasons`, { headers });
-                const seasonData = await seasonRes.json();
-                const currentSeason = seasonData.data.find(s => s.attributes.isCurrentSeason).id;
-
-                for (let member of CLAN_MEMBERS) {
-                    const nick = member.nickname;
-                    const safeId = nick.toLowerCase().replace(/[^a-z0-9]/g, '');
-
-                    try {
-                        const playerRes = await fetch(`https://api.pubg.com/shards/${PLATFORM}/players?filter[playerNames]=${nick}`, { headers });
-                        if (!playerRes.ok) throw new Error("유저 없음");
-                        const playerData = await playerRes.json();
-                        const accountId = playerData.data[0].id;
-
-                        const rankedRes = await fetch(`https://api.pubg.com/shards/${PLATFORM}/players/${accountId}/seasons/${currentSeason}/ranked`, { headers });
-                        const rankedData = await rankedRes.json();
-                        const rModes = rankedData.data.attributes.rankedGameModeStats;
-                        statsState[nick].data.ranked.solo = getBestMode(rModes, 'solo', 'solo-fpp');
-                        statsState[nick].data.ranked.duo = getBestMode(rModes, 'duo', 'duo-fpp');
-                        statsState[nick].data.ranked.squad = getBestMode(rModes, 'squad', 'squad-fpp');
-
-                        const normalRes = await fetch(`https://api.pubg.com/shards/${PLATFORM}/players/${accountId}/seasons/${currentSeason}`, { headers });
-                        const normalData = await normalRes.json();
-                        const nModes = normalData.data.attributes.gameModeStats;
-                        statsState[nick].data.normal.solo = getBestMode(nModes, 'solo', 'solo-fpp');
-                        statsState[nick].data.normal.duo = getBestMode(nModes, 'duo', 'duo-fpp');
-                        statsState[nick].data.normal.squad = getBestMode(nModes, 'squad', 'squad-fpp');
-
-                        renderStats(nick);
-
-                    } catch (err) {
-                        console.error(`Error for ${nick}:`, err);
-                        document.getElementById(`stats-${safeId}`).innerHTML = `<div class="loading-text" style="color:#ff3333; animation:none;">데이터 없음 (닉네임/플랫폼 확인)</div>`;
-                        document.getElementById(`badge-${safeId}`).innerText = "ERROR";
-                        document.getElementById(`badge-${safeId}`).style.color = "#ff3333";
-                        document.getElementById(`badge-${safeId}`).style.borderColor = "#ff3333";
-                    }
+                
+                if (!seasonRes.ok) {
+                    throw new Error(`서버 응답 거부 (상태코드: ${seasonRes.status}) - API 키를 확인하세요.`);
                 }
+                
+                const seasonData = await seasonRes.json();
+                currentSeason = seasonData.data.find(s => s.attributes.isCurrentSeason).id;
+
             } catch (error) {
                 console.error("PUBG Season API Error:", error);
+                CLAN_MEMBERS.forEach(member => {
+                    const safeId = member.nickname.toLowerCase().replace(/[^a-z0-9]/g, '');
+                    const statsContainer = document.getElementById(`stats-${safeId}`);
+                    const badgeContainer = document.getElementById(`badge-${safeId}`);
+                    if(statsContainer) statsContainer.innerHTML = `<div class="loading-text" style="color:#ff3333; animation:none; line-height:1.4; padding-top:40px;">API 연결 실패<br><span style="font-size:0.65rem; color:#aaa;">${error.message}</span></div>`;
+                    if(badgeContainer) { badgeContainer.innerText = "ERROR"; badgeContainer.style.color = "#ff3333"; badgeContainer.style.borderColor = "#ff3333"; }
+                });
+                return; // 여기서 함수 완전 종료 (무한 로딩 방지)
+            }
+
+            // 2. 시즌을 알아냈다면 개별 유저 정보 가져오기 시작
+            for (let member of CLAN_MEMBERS) {
+                const nick = member.nickname;
+                const safeId = nick.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+                try {
+                    // API 요청 제한(Rate Limit)에 걸리지 않도록 0.3초씩 쉬면서 요청
+                    await new Promise(resolve => setTimeout(resolve, 300)); 
+
+                    const playerRes = await fetch(`https://api.pubg.com/shards/${PLATFORM}/players?filter[playerNames]=${nick}`, { headers });
+                    if (!playerRes.ok) throw new Error("닉네임 조회 실패");
+                    const playerData = await playerRes.json();
+                    const accountId = playerData.data[0].id;
+
+                    const rankedRes = await fetch(`https://api.pubg.com/shards/${PLATFORM}/players/${accountId}/seasons/${currentSeason}/ranked`, { headers });
+                    let rModes = {};
+                    if(rankedRes.ok) {
+                        const rankedData = await rankedRes.json();
+                        rModes = rankedData.data.attributes.rankedGameModeStats || {};
+                    }
+                    statsState[nick].data.ranked.solo = getBestMode(rModes, 'solo', 'solo-fpp');
+                    statsState[nick].data.ranked.duo = getBestMode(rModes, 'duo', 'duo-fpp');
+                    statsState[nick].data.ranked.squad = getBestMode(rModes, 'squad', 'squad-fpp');
+
+                    const normalRes = await fetch(`https://api.pubg.com/shards/${PLATFORM}/players/${accountId}/seasons/${currentSeason}`, { headers });
+                    let nModes = {};
+                    if(normalRes.ok) {
+                        const normalData = await normalRes.json();
+                        nModes = normalData.data.attributes.gameModeStats || {};
+                    }
+                    statsState[nick].data.normal.solo = getBestMode(nModes, 'solo', 'solo-fpp');
+                    statsState[nick].data.normal.duo = getBestMode(nModes, 'duo', 'duo-fpp');
+                    statsState[nick].data.normal.squad = getBestMode(nModes, 'squad', 'squad-fpp');
+
+                    // 데이터 가져오기 완료 후 화면에 표시
+                    renderStats(nick);
+
+                } catch (err) {
+                    console.error(`Error for ${nick}:`, err);
+                    const statsContainer = document.getElementById(`stats-${safeId}`);
+                    const badgeContainer = document.getElementById(`badge-${safeId}`);
+                    if(statsContainer) statsContainer.innerHTML = `<div class="loading-text" style="color:#ff3333; animation:none; line-height:1.4; padding-top:40px;">조회 실패<br><span style="font-size:0.65rem; color:#aaa;">(${err.message})</span><br><span style="font-size:0.65rem; color:#aaa;">닉네임이나 플랫폼(스팀/카카오)을 확인하세요.</span></div>`;
+                    if(badgeContainer) { badgeContainer.innerText = "ERROR"; badgeContainer.style.color = "#ff3333"; badgeContainer.style.borderColor = "#ff3333"; }
+                }
             }
         }
 
@@ -489,7 +514,7 @@
                 badgeContainer.innerText = state.type === 'ranked' ? "Unranked" : "No Record";
                 badgeContainer.style.color = "#888";
                 badgeContainer.style.borderColor = "#888";
-                statsContainer.innerHTML = `<div class="loading-text" style="animation:none;">해당 모드의 플레이 기록이 없습니다.</div>`;
+                statsContainer.innerHTML = `<div class="loading-text" style="animation:none; padding-top:40px;">해당 모드의 플레이 기록이 없습니다.</div>`;
                 return;
             }
 
