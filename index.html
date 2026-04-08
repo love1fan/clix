@@ -5,9 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PUBG CLIX CLAN | 공식 홈페이지</title>
     
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+
+    <!-- AOS (Animate On Scroll) CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
         body { 
@@ -95,10 +99,6 @@
 
         .section { padding: 120px 8%; max-width: 1200px; margin: 0 auto; }
         .section-title { font-size: 2.8rem; font-weight: 800; margin-bottom: 60px; text-align: center; letter-spacing: 8px; color: #ff5e00; text-transform: uppercase; }
-
-        /* --- 스크롤 시 부드럽게 나타나는 애니메이션 CSS --- */
-        .reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1); }
-        .reveal.active { opacity: 1; transform: translateY(0); }
 
         .about-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
         .tag { padding: 15px 25px; background: #111; border-left: 3px solid #ff5e00; font-weight: 700; margin-right: 10px; display: inline-block; }
@@ -246,8 +246,8 @@
     </section>
 
     <section class="section" id="about">
-        <!-- reveal 클래스 추가 (스크롤 등장 효과) -->
-        <div class="about-wrapper reveal">
+        <!-- data-aos="fade-up" 속성으로 스크롤 애니메이션 적용 -->
+        <div class="about-wrapper" data-aos="fade-up">
             <div class="about-intro-box">
                 <h3 style="color:#888; letter-spacing:2px;">Who We Are</h3>
                 <h2 style="font-size:3.5rem; margin:10px 0;">WE ARE THE<br><span style="color: #ff5e00;">CLIX CLAN</span></h2>
@@ -293,14 +293,14 @@
     </section>
 
     <section class="section" id="stream">
-        <h2 class="section-title reveal">CLIX LIVE STREAM</h2>
-        <div class="stream-tabs reveal">
+        <h2 class="section-title" data-aos="fade-up">CLIX LIVE STREAM</h2>
+        <div class="stream-tabs" data-aos="fade-up" data-aos-delay="100">
             <button class="stream-tab-btn active" onclick="changeStream('chzzk', '스트리머UID', this)">CHZZK</button>
             <button class="stream-tab-btn" onclick="changeStream('soop', '스트리머ID', this)">SOOP</button>
             <button class="stream-tab-btn" onclick="changeStream('youtube', 'UCfcHk_zLlYAM8tqdwX8uVlQ', this)">YOUTUBE</button>
         </div>
         
-        <div class="stream-container reveal">
+        <div class="stream-container" data-aos="fade-up" data-aos-delay="200">
             <div class="video-wrapper">
                 <iframe id="live-iframe" src="https://chzzk.naver.com/live/스트리머UID/embed" frameborder="0" allowfullscreen="true" width="100%" height="100%"></iframe>
             </div>
@@ -323,8 +323,8 @@
     </section>
 
     <section class="section" id="discord">
-        <h2 class="section-title reveal">CLIX DISCORD</h2>
-        <div class="discord-container reveal">
+        <h2 class="section-title" data-aos="fade-up">CLIX DISCORD</h2>
+        <div class="discord-container" data-aos="fade-up">
             <div style="background: linear-gradient(45deg, #5865F2, #4752C4); padding: 60px; border-radius: 12px; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 30px rgba(88, 101, 242, 0.2);">
                 <svg width="100" height="100" viewBox="0 0 127.14 96.36" fill="#fff">
                     <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.93A97.68,97.68,0,0,0,49,6.93,72.06,72.06,0,0,0,45.67,0,105.15,105.15,0,0,0,19.44,8.07C2.7,33.15-1.79,57.67.45,81.69a105.73,105.73,0,0,0,32.89,16.54,74.8,74.8,0,0,0,7.74-12.63,67.59,67.59,0,0,1-11.89-5.69c1,.74,2.06,1.53,3.07,2.25a74.6,74.6,0,0,0,62.88,0c1.01-.72,2-1.51,3.07-2.25a67.59,67.59,0,0,1-11.89,5.69,74.8,74.8,0,0,0,7.74,12.63,105.73,105.73,0,0,0,32.89-16.54C129.44,51.15,124.69,27.05,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
@@ -339,16 +339,27 @@
     </section>
 
     <section class="section" id="members">
-        <h2 class="section-title reveal">CLIX SQUAD STATS</h2>
-        <div class="stats-grid reveal" id="stats-grid"></div>
-        <div class="reveal" style="margin-top:50px; text-align:center;">
+        <h2 class="section-title" data-aos="fade-up">CLIX SQUAD STATS</h2>
+        <div class="stats-grid" id="stats-grid" data-aos="fade-up"></div>
+        <div data-aos="fade-up" style="margin-top:50px; text-align:center;">
             <a href="https://pubg.op.gg" target="_blank" style="color:#ff5e00; text-decoration:none; font-weight:800; border: 1px solid #ff5e00; padding: 10px 20px; border-radius: 4px;">PUBG.OP.GG 바로가기</a>
         </div>
     </section>
 
-    <footer class="reveal">&copy; 2026 CLAN CLIX. ALL RIGHTS RESERVED.</footer>
+    <footer data-aos="fade-up">&copy; 2026 CLAN CLIX. ALL RIGHTS RESERVED.</footer>
 
+    <!-- AOS Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
     <script>
+        // --- AOS 초기화 ---
+        AOS.init({
+            duration: 800,   // 애니메이션 지속 시간 (0.8초)
+            once: true,      // 스크롤을 내릴 때 한 번만 실행 (부드러운 UX)
+            offset: 100,     // 요소가 화면에 100px 정도 보일 때 애니메이션 시작
+            easing: 'ease-out-cubic'
+        });
+
         const firebaseConfig = {
             apiKey: "AIzaSyAFSAu2aynX6YPiJEatWy9IQgWgUuTx8ds",
             authDomain: "korclix.firebaseapp.com",
@@ -670,20 +681,6 @@
             });
         }
 
-        // --- 스크롤 Reveal 애니메이션 ---
-        function initScrollReveal() {
-            const reveals = document.querySelectorAll('.reveal');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            reveals.forEach(reveal => observer.observe(reveal));
-        }
-
         // --- 페이지 로드시 실행되는 메인 초기화 블록 ---
         document.addEventListener('DOMContentLoaded', () => {
             const savedEmail = localStorage.getItem('clix_saved_email');
@@ -700,10 +697,7 @@
 
             initStatCards();
             fetchAllPubgStats();
-            
-            // 시각 효과 실행
             initParticles();
-            initScrollReveal();
         });
 
         function getMousePos(evt) {
