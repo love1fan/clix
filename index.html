@@ -14,6 +14,13 @@
             margin: 0; font-family: 'Inter', 'Segoe UI', sans-serif; background-color: #0a0a0a; color: #ffffff; 
             line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth;
             -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+            /* 기본 마우스 커서를 하얀색 크로스헤어로 변경 */
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line></svg>') 12 12, auto;
+        }
+
+        /* 버튼이나 링크에 마우스를 올렸을 때 오렌지색 조준점으로 변경 */
+        a, button, .auth-switch, .logout-link, .tool-btn, .map-nav-btn, .play-toggle, .tool-color, label {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23ff5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><circle cx="12" cy="12" r="2" fill="%23ff5e00"></circle></svg>') 12 12, pointer !important;
         }
         
         #lock-overlay { 
@@ -27,8 +34,8 @@
         
         .auth-container { background: #111; padding: 40px; border-radius: 8px; border: 1px solid #222; width: 350px; box-sizing: border-box; }
         .auth-input { width: 100%; padding: 12px; margin-bottom: 10px; background: #1a1a1a; border: 1px solid #333; color: #fff; box-sizing: border-box; font-family: inherit; }
-        .auth-btn { width: 100%; padding: 15px; background: #ff5e00; color: white; border: none; font-weight: 800; cursor: pointer; margin-bottom: 10px; font-size: 1rem; text-transform: uppercase; }
-        .auth-switch { font-size: 0.8rem; color: #666; cursor: pointer; text-decoration: underline; margin-top: 10px; }
+        .auth-btn { width: 100%; padding: 15px; background: #ff5e00; color: white; border: none; font-weight: 800; margin-bottom: 10px; font-size: 1rem; text-transform: uppercase; }
+        .auth-switch { font-size: 0.8rem; color: #666; text-decoration: underline; margin-top: 10px; }
 
         #verify-screen { display: none; }
         #signup-extra-fields { display: none; margin-bottom: 10px; }
@@ -40,7 +47,7 @@
         nav .logo { font-weight: 900; font-size: 26px; color: #ff5e00 !important; letter-spacing: 2px; text-transform: uppercase; text-decoration: none !important; }
         nav ul { list-style: none; display: flex; margin: 0; padding: 0; align-items: center; }
         nav ul li a { margin-left: 20px; font-size: 12px; font-weight: 600; color: #999 !important; text-decoration: none !important; text-transform: uppercase; }
-        .logout-link { margin-left: 10px; font-size: 10px; color: #ff3333 !important; cursor: pointer; border: 1px solid #444; padding: 5px 10px; border-radius: 4px; font-weight: bold; }
+        .logout-link { margin-left: 10px; font-size: 10px; color: #ff3333 !important; border: 1px solid #444; padding: 5px 10px; border-radius: 4px; font-weight: bold; }
         .logout-link:hover { background: rgba(255,255,255,0.1); }
 
         /* --- HERO 섹션 --- */
@@ -56,6 +63,12 @@
             background-size: 40px 40px; z-index: 1; pointer-events: none;
         }
         
+        /* 불티 파티클 캔버스 CSS */
+        #particles-canvas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; pointer-events: none;
+        }
+
         .hero-content { position: relative; z-index: 2; }
         .glitch { font-size: 8rem; margin: 0; letter-spacing: 20px; font-weight: 900; text-transform: uppercase; position: relative; color: white; text-shadow: 0 0 30px rgba(255, 94, 0, 0.8); }
         .glitch::before, .glitch::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent; }
@@ -83,25 +96,29 @@
         .section { padding: 120px 8%; max-width: 1200px; margin: 0 auto; }
         .section-title { font-size: 2.8rem; font-weight: 800; margin-bottom: 60px; text-align: center; letter-spacing: 8px; color: #ff5e00; text-transform: uppercase; }
 
+        /* --- 스크롤 시 부드럽게 나타나는 애니메이션 CSS --- */
+        .reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
         .about-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
         .tag { padding: 15px 25px; background: #111; border-left: 3px solid #ff5e00; font-weight: 700; margin-right: 10px; display: inline-block; }
         .map-dashboard { background: #111; border: 1px solid #222; border-radius: 12px; overflow: hidden; }
         .map-nav { display: flex; background: #1a1a1a; }
-        .map-nav-btn { flex: 1; padding: 20px; border: none; background: none; color: #666; font-weight: 800; cursor: pointer; }
+        .map-nav-btn { flex: 1; padding: 20px; border: none; background: none; color: #666; font-weight: 800; }
         .map-nav-btn.active { background: #ff5e00; color: white; }
         .map-content-area { padding: 30px; display: grid; grid-template-columns: 150px 1fr; gap: 30px; }
         
         .map-drawing-container { position: relative; width: 100%; border: 2px solid #333; border-radius: 8px; overflow: hidden; background: #000; }
         .map-drawing-container img { width: 100%; height: auto; display: block; object-fit: cover; }
-        #tactical-canvas { position: absolute; top: 0; left: 0; z-index: 10; cursor: crosshair; touch-action: none; }
+        #tactical-canvas { position: absolute; top: 0; left: 0; z-index: 10; touch-action: none; }
         .drawing-tools { display: flex; gap: 10px; margin-top: 10px; background: #1a1a1a; padding: 10px; border-radius: 8px; align-items: center; flex-wrap: wrap; }
-        .tool-btn { background: #333; color: #fff; border: 1px solid #444; padding: 5px 15px; cursor: pointer; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
+        .tool-btn { background: #333; color: #fff; border: 1px solid #444; padding: 5px 15px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
         .tool-btn.active { background: #ff5e00; border-color: #ff5e00; }
-        .tool-color { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+        .tool-color { width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; }
         .tool-color.active { border-color: #fff; box-shadow: 0 0 5px #fff; }
 
         .stream-tabs { display: flex; gap: 10px; margin-bottom: 30px; justify-content: center; }
-        .stream-tab-btn { background: #111; border: 1px solid #333; color: #888; padding: 12px 25px; cursor: pointer; font-weight: 800; border-radius: 4px; transition: 0.3s; font-size: 0.8rem; }
+        .stream-tab-btn { background: #111; border: 1px solid #333; color: #888; padding: 12px 25px; font-weight: 800; border-radius: 4px; transition: 0.3s; font-size: 0.8rem; }
         .stream-tab-btn.active { background: #ff5e00; color: #fff; border-color: #ff5e00; box-shadow: 0 0 15px rgba(255, 94, 0, 0.3); }
         .stream-tab-btn:hover { border-color: #ff5e00; color: #fff; }
 
@@ -117,7 +134,7 @@
         .chat-input-area { padding: 10px; border-top: 1px solid #222; display: flex; gap: 8px; background: #151515; }
         #chat-input { flex: 1; background: #000; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 4px; font-size: 0.85rem; outline: none; }
         #chat-input:focus { border-color: #ff5e00; }
-        .chat-send-btn { background: #ff5e00; color: #fff; border: none; padding: 0 15px; border-radius: 4px; font-weight: 800; cursor: pointer; font-size: 0.8rem; }
+        .chat-send-btn { background: #ff5e00; color: #fff; border: none; padding: 0 15px; border-radius: 4px; font-weight: 800; font-size: 0.8rem; }
         
         #chat-messages::-webkit-scrollbar { width: 4px; }
         #chat-messages::-webkit-scrollbar-track { background: #000; }
@@ -128,18 +145,8 @@
 
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-top: 50px; }
         
-        /* --- 스탯 카드 CSS --- */
-        .stat-card { 
-            background: rgba(20, 20, 20, 0.95); border: 1px solid #222; border-radius: 12px; padding: 35px; 
-            position: relative; overflow: hidden;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-        }
-        .stat-card:hover { 
-            transform: translateY(-8px); 
-            border-color: #ff5e00; 
-            box-shadow: 0 15px 35px rgba(255, 94, 0, 0.2), 0 0 15px rgba(255, 94, 0, 0.1) inset; 
-        }
+        .stat-card { background: rgba(20, 20, 20, 0.95); border: 1px solid #222; border-radius: 12px; padding: 35px; position: relative; overflow: hidden; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); }
+        .stat-card:hover { transform: translateY(-8px); border-color: #ff5e00; box-shadow: 0 15px 35px rgba(255, 94, 0, 0.2), 0 0 15px rgba(255, 94, 0, 0.1) inset; }
         .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: #ff5e00; }
         
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #222; }
@@ -153,10 +160,10 @@
         .rank-badge { position: absolute; top: 15px; right: 15px; font-size: 0.7rem; font-weight: 900; padding: 3px 8px; border: 1px solid; border-radius: 4px; }
         
         .match-type-tabs { display: flex; gap: 5px; margin-bottom: 10px; }
-        .match-type-btn { flex: 1; padding: 6px; background: #1a1a1a; border: 1px solid #333; color: #888; font-size: 0.75rem; font-weight: 800; cursor: pointer; border-radius: 4px; transition: 0.2s; }
+        .match-type-btn { flex: 1; padding: 6px; background: #1a1a1a; border: 1px solid #333; color: #888; font-size: 0.75rem; font-weight: 800; border-radius: 4px; transition: 0.2s; }
         .match-type-btn.active { background: #ff5e00; color: #fff; border-color: #ff5e00; }
         .mode-tabs { display: flex; gap: 5px; margin-bottom: 15px; background: #000; padding: 5px; border-radius: 6px; border: 1px solid #222; }
-        .mode-btn { flex: 1; padding: 5px; background: transparent; border: none; color: #666; font-size: 0.7rem; font-weight: 800; cursor: pointer; border-radius: 4px; transition: 0.2s; text-transform: uppercase; }
+        .mode-btn { flex: 1; padding: 5px; background: transparent; border: none; color: #666; font-size: 0.7rem; font-weight: 800; border-radius: 4px; transition: 0.2s; text-transform: uppercase; }
         .mode-btn.active { background: #333; color: #ff5e00; }
         .loading-text { font-size: 0.8rem; color: #888; text-align: center; padding: 20px 0; font-weight: bold; animation: blink 1s infinite; grid-column: 1 / -1; }
         @keyframes blink { 50% { opacity: 0.5; } }
@@ -166,7 +173,7 @@
 
         #music-player { position: fixed; bottom: 30px; left: 30px; background: rgba(0, 0, 0, 0.85); border: 1px solid #222; padding: 12px 20px; border-radius: 12px; display: flex; align-items: center; gap: 15px; z-index: 1000; backdrop-filter: blur(5px); transition: 0.3s; }
         #music-player:hover { border-color: #ff5e00; }
-        .play-toggle { background: #ff5e00; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .play-toggle { background: #ff5e00; border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
         .music-on { animation: pulse 1.5s infinite; box-shadow: 0 0 15px #ff5e00 !important; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
     </style>
@@ -229,6 +236,9 @@
     </nav>
 
     <section class="hero" id="home">
+        <!-- 불티 효과를 위한 캔버스 추가 -->
+        <canvas id="particles-canvas"></canvas>
+
         <div class="hero-content">
             <h1 class="glitch" data-text="CLIX">CLIX</h1>
             <p>BATTLEGROUND KOR CLIX</p>
@@ -236,7 +246,8 @@
     </section>
 
     <section class="section" id="about">
-        <div class="about-wrapper">
+        <!-- reveal 클래스 추가 (스크롤 등장 효과) -->
+        <div class="about-wrapper reveal">
             <div class="about-intro-box">
                 <h3 style="color:#888; letter-spacing:2px;">Who We Are</h3>
                 <h2 style="font-size:3.5rem; margin:10px 0;">WE ARE THE<br><span style="color: #ff5e00;">CLIX CLAN</span></h2>
@@ -282,14 +293,14 @@
     </section>
 
     <section class="section" id="stream">
-        <h2 class="section-title">CLIX LIVE STREAM</h2>
-        <div class="stream-tabs">
+        <h2 class="section-title reveal">CLIX LIVE STREAM</h2>
+        <div class="stream-tabs reveal">
             <button class="stream-tab-btn active" onclick="changeStream('chzzk', '스트리머UID', this)">CHZZK</button>
             <button class="stream-tab-btn" onclick="changeStream('soop', '스트리머ID', this)">SOOP</button>
             <button class="stream-tab-btn" onclick="changeStream('youtube', 'UCfcHk_zLlYAM8tqdwX8uVlQ', this)">YOUTUBE</button>
         </div>
         
-        <div class="stream-container">
+        <div class="stream-container reveal">
             <div class="video-wrapper">
                 <iframe id="live-iframe" src="https://chzzk.naver.com/live/스트리머UID/embed" frameborder="0" allowfullscreen="true" width="100%" height="100%"></iframe>
             </div>
@@ -300,7 +311,7 @@
                         <span style="width: 8px; height: 8px; background: #ff5e00; border-radius: 50%; box-shadow: 0 0 5px #ff5e00;"></span>
                         <span style="font-size: 0.8rem; font-weight: 900; letter-spacing: 1px;">CLIX LIVE CHAT</span>
                     </div>
-                    <button id="clear-all-btn" onclick="clearAllChats()" style="display:none; background:none; border:none; color:#ff3333; font-size:10px; cursor:pointer; font-weight:bold;">CLEAR ALL</button>
+                    <button id="clear-all-btn" onclick="clearAllChats()" style="display:none; background:none; border:none; color:#ff3333; font-size:10px; font-weight:bold;">CLEAR ALL</button>
                 </div>
                 <div id="chat-messages"></div>
                 <div class="chat-input-area">
@@ -312,8 +323,8 @@
     </section>
 
     <section class="section" id="discord">
-        <h2 class="section-title">CLIX DISCORD</h2>
-        <div class="discord-container">
+        <h2 class="section-title reveal">CLIX DISCORD</h2>
+        <div class="discord-container reveal">
             <div style="background: linear-gradient(45deg, #5865F2, #4752C4); padding: 60px; border-radius: 12px; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 30px rgba(88, 101, 242, 0.2);">
                 <svg width="100" height="100" viewBox="0 0 127.14 96.36" fill="#fff">
                     <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.93A97.68,97.68,0,0,0,49,6.93,72.06,72.06,0,0,0,45.67,0,105.15,105.15,0,0,0,19.44,8.07C2.7,33.15-1.79,57.67.45,81.69a105.73,105.73,0,0,0,32.89,16.54,74.8,74.8,0,0,0,7.74-12.63,67.59,67.59,0,0,1-11.89-5.69c1,.74,2.06,1.53,3.07,2.25a74.6,74.6,0,0,0,62.88,0c1.01-.72,2-1.51,3.07-2.25a67.59,67.59,0,0,1-11.89,5.69,74.8,74.8,0,0,0,7.74,12.63,105.73,105.73,0,0,0,32.89-16.54C129.44,51.15,124.69,27.05,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
@@ -328,14 +339,14 @@
     </section>
 
     <section class="section" id="members">
-        <h2 class="section-title">CLIX SQUAD STATS</h2>
-        <div class="stats-grid" id="stats-grid"></div>
-        <div style="margin-top:50px; text-align:center;">
+        <h2 class="section-title reveal">CLIX SQUAD STATS</h2>
+        <div class="stats-grid reveal" id="stats-grid"></div>
+        <div class="reveal" style="margin-top:50px; text-align:center;">
             <a href="https://pubg.op.gg" target="_blank" style="color:#ff5e00; text-decoration:none; font-weight:800; border: 1px solid #ff5e00; padding: 10px 20px; border-radius: 4px;">PUBG.OP.GG 바로가기</a>
         </div>
     </section>
 
-    <footer>&copy; 2026 CLAN CLIX. ALL RIGHTS RESERVED.</footer>
+    <footer class="reveal">&copy; 2026 CLAN CLIX. ALL RIGHTS RESERVED.</footer>
 
     <script>
         const firebaseConfig = {
@@ -353,7 +364,7 @@
         let isUserAdmin = false;
         let userNick = "익명";
 
-        // --- PUBG API 다중 유저 연동 및 429 에러 방지(캐싱) 적용 ---
+        // --- PUBG API ---
         const PUBG_API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIyZDM0N2Y2MC0xNGJjLTAxM2YtMjljYy01MmJjZWJmMWUzMTYiLCJpc3MiOiJnYW1lbG9ja2VyIiwiaWF0IjoxNzc1NTcyMTk3LCJwdWIiOiJibHVlaG9sZSIsInRpdGxlIjoicHViZyIsImFwcCI6ImNsaXgtY2xhbi1zdGF0In0.uV5HbysN7Yb8MtfPNFWxxTz1o62sCS60thT5uy8MsUM"; 
         const PLATFORM = "steam"; 
         
@@ -373,7 +384,6 @@
                 const nick = member.nickname;
                 const safeId = nick.toLowerCase().replace(/[^a-z0-9]/g, '');
 
-                // 초기 상태 설정
                 if (!statsState[nick]) {
                     statsState[nick] = {
                         type: 'ranked', mode: 'squad',
@@ -408,13 +418,11 @@
         }
 
         async function fetchAllPubgStats() {
-            // 💡 [에러 방지 핵심] 최근 5분 이내에 불러온 기록이 있으면 API 서버에 요청하지 않고 즉시 보여줍니다.
             const cachedData = sessionStorage.getItem('pubg_stats_cache');
             const cachedTime = sessionStorage.getItem('pubg_stats_time');
             if (cachedData && cachedTime && (Date.now() - cachedTime < 5 * 60 * 1000)) {
                 statsState = JSON.parse(cachedData);
                 CLAN_MEMBERS.forEach(member => renderStats(member.nickname));
-                console.log("캐시된 전적 데이터를 사용합니다. (API 호출 안함)");
                 return;
             }
 
@@ -422,7 +430,6 @@
             let currentSeason;
 
             try {
-                // 1. 시즌 가져오기
                 const seasonRes = await fetch(`https://api.pubg.com/shards/${PLATFORM}/seasons`, { headers });
                 if (!seasonRes.ok) {
                     if (seasonRes.status === 429) throw new Error("API 요청 한도 초과(429). 1분 후 새로고침 하세요.");
@@ -431,7 +438,6 @@
                 const seasonData = await seasonRes.json();
                 currentSeason = seasonData.data.find(s => s.attributes.isCurrentSeason).id;
 
-                // 2. 여러 명의 Account ID를 한 번에 조회 (API 호출 횟수 대폭 절약)
                 const nicknames = CLAN_MEMBERS.map(m => m.nickname).join(',');
                 const playersRes = await fetch(`https://api.pubg.com/shards/${PLATFORM}/players?filter[playerNames]=${nicknames}`, { headers });
                 
@@ -443,7 +449,6 @@
                 const accountMap = {};
                 playersData.data.forEach(p => { accountMap[p.attributes.name.toLowerCase()] = p.id; });
 
-                // 3. 개별 유저 스탯 조회
                 for (let member of CLAN_MEMBERS) {
                     const nick = member.nickname;
                     const safeId = nick.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -455,10 +460,8 @@
                     }
 
                     try {
-                        // API 429 방지를 위해 요청 전 0.5초 대기
                         await new Promise(resolve => setTimeout(resolve, 500)); 
 
-                        // 경쟁전 조회
                         const rankedRes = await fetch(`https://api.pubg.com/shards/${PLATFORM}/players/${accountId}/seasons/${currentSeason}/ranked`, { headers });
                         if(rankedRes.status === 429) throw new Error("요청 폭주(429). 1분 후 시도 요망");
                         let rModes = {};
@@ -468,7 +471,6 @@
                         statsState[nick].data.ranked.duo = getBestMode(rModes, 'duo', 'duo-fpp');
                         statsState[nick].data.ranked.squad = getBestMode(rModes, 'squad', 'squad-fpp');
 
-                        // 일반전 조회
                         await new Promise(resolve => setTimeout(resolve, 300)); 
                         const normalRes = await fetch(`https://api.pubg.com/shards/${PLATFORM}/players/${accountId}/seasons/${currentSeason}`, { headers });
                         let nModes = {};
@@ -485,7 +487,6 @@
                     }
                 }
 
-                // 모든 데이터를 다 가져오면 세션 스토리지에 캐시 저장 (새로고침 대응)
                 sessionStorage.setItem('pubg_stats_cache', JSON.stringify(statsState));
                 sessionStorage.setItem('pubg_stats_time', Date.now().toString());
 
@@ -497,7 +498,6 @@
             }
         }
 
-        // 공통 에러 표시 함수
         function showErrorMsg(safeId, msg) {
             const statsContainer = document.getElementById(`stats-${safeId}`);
             const badgeContainer = document.getElementById(`badge-${safeId}`);
@@ -619,7 +619,72 @@
             if(img && img.complete) initCanvas();
         });
 
-        // 페이지 로드시 실행되는 메인 초기화 블록
+        // --- 파티클 애니메이션 ---
+        function initParticles() {
+            const particleCanvas = document.getElementById('particles-canvas');
+            if (!particleCanvas) return;
+            const pCtx = particleCanvas.getContext('2d');
+            particleCanvas.width = window.innerWidth;
+            particleCanvas.height = window.innerHeight;
+
+            const particlesArray = [];
+            const numberOfParticles = 70;
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * particleCanvas.width;
+                    this.y = particleCanvas.height + Math.random() * particleCanvas.height;
+                    this.size = Math.random() * 2 + 0.5; 
+                    this.speedX = Math.random() * 1.5 - 0.75; 
+                    this.speedY = Math.random() * -2 - 1; 
+                    this.opacity = Math.random();
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.y < 0) { 
+                        this.y = particleCanvas.height;
+                        this.x = Math.random() * particleCanvas.width;
+                    }
+                }
+                draw() {
+                    pCtx.fillStyle = `rgba(255, 94, 0, ${this.opacity})`;
+                    pCtx.beginPath();
+                    pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    pCtx.fill();
+                }
+            }
+
+            for (let i = 0; i < numberOfParticles; i++) particlesArray.push(new Particle());
+
+            function animateParticles() {
+                pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+                particlesArray.forEach(p => { p.update(); p.draw(); });
+                requestAnimationFrame(animateParticles);
+            }
+            animateParticles();
+
+            window.addEventListener('resize', () => {
+                particleCanvas.width = window.innerWidth;
+                particleCanvas.height = window.innerHeight;
+            });
+        }
+
+        // --- 스크롤 Reveal 애니메이션 ---
+        function initScrollReveal() {
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            reveals.forEach(reveal => observer.observe(reveal));
+        }
+
+        // --- 페이지 로드시 실행되는 메인 초기화 블록 ---
         document.addEventListener('DOMContentLoaded', () => {
             const savedEmail = localStorage.getItem('clix_saved_email');
             if (savedEmail) {
@@ -635,6 +700,10 @@
 
             initStatCards();
             fetchAllPubgStats();
+            
+            // 시각 효과 실행
+            initParticles();
+            initScrollReveal();
         });
 
         function getMousePos(evt) {
