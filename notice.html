@@ -18,7 +18,7 @@
             -webkit-user-select: none; user-select: none; 
         }
 
-        /* 네비게이션바 (투명 유리 블러 효과) */
+        /* 네비게이션바 */
         nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; background: rgba(8, 8, 8, 0.7) !important; backdrop-filter: blur(12px); position: fixed; width: 100%; top: 0; left: 0; box-sizing: border-box; z-index: 100; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
         nav .logo { font-weight: 900; font-size: 26px; color: #ff5e00; text-decoration: none; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 0 10px rgba(255,94,0,0.3); }
         nav ul { list-style: none; display: flex; margin: 0; padding: 0; }
@@ -32,7 +32,7 @@
         .back-btn { color: #aaa; text-decoration: none; border: 1px solid rgba(255,255,255,0.1); padding: 10px 25px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; transition: 0.3s; background: rgba(255,255,255,0.03); backdrop-filter: blur(5px); }
         .back-btn:hover { background: #ff5e00; color: #fff; border-color: #ff5e00; box-shadow: 0 0 15px rgba(255,94,0,0.3); }
 
-        /* 관리자 에디터 (모서리 둥글게, 반투명) */
+        /* 관리자 에디터 */
         #admin-editor { display: none; background: rgba(15, 15, 15, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255, 94, 0, 0.3); padding: 30px; margin-bottom: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
         .editor-title { color: #ff5e00; font-weight: 900; font-size: 1.1rem; margin-bottom: 20px; display: block; letter-spacing: 1px; }
         input, textarea { width: 100%; padding: 15px; margin-bottom: 15px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; box-sizing: border-box; font-family: inherit; border-radius: 8px; transition: 0.3s; outline: none; }
@@ -49,15 +49,10 @@
         .notice-card { background: rgba(15, 15, 15, 0.8); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 12px; padding: 30px; position: relative; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(5px); }
         .notice-card:hover { border-color: rgba(255, 94, 0, 0.3); background: rgba(20, 20, 20, 0.9); box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(255,94,0,0.05) inset; transform: translateY(-3px); }
         
-        .notice-header { 
-    display: flex; justify-content: space-between; align-items: center; 
-    border-bottom: 1px solid rgba(255,255,255,0.05); 
-    padding-bottom: 15px; margin-bottom: 20px; 
-    padding-right: 50px; /* 삭제 버튼을 위한 우측 공간 추가 */
-}
+        .notice-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; margin-bottom: 20px; }
         .notice-title { font-size: 1.3rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 12px; }
         .notice-tag { background: #ff5e00; color: #000; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: 900; letter-spacing: 1px; box-shadow: 0 0 10px rgba(255,94,0,0.3); }
-        .notice-date { color: #666; font-size: 0.9rem; font-weight: 600; background: rgba(255,255,255,0.05); padding: 4px 12px; border-radius: 20px; }
+        .notice-date { color: #666; font-size: 0.9rem; font-weight: 600; background: rgba(255,255,255,0.05); padding: 4px 12px; border-radius: 20px; margin-right: 60px; }
         .notice-content { color: #bbb; white-space: pre-wrap; line-height: 1.8; font-size: 1.05rem; }
         
         .btn-del { color: #888; cursor: pointer; font-size: 0.8rem; position: absolute; top: 30px; right: 30px; font-weight: 800; display: none; transition: 0.3s; background: none; border: none; text-decoration: underline; }
@@ -115,7 +110,7 @@
                 content: "🚨 **[@everyone] 새로운 공식 공지사항이 등록되었습니다.**",
                 embeds: [{ title: `${tag} ${title}`, description: content.length > 500 ? content.substring(0, 500) + "..." : content, color: 16735744, timestamp: new Date().toISOString(), footer: { text: "CLIX CLAN OFFICIAL NOTICE" } }]
             };
-            fetch(DISCORD_NOTICE_WEBHOOK, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).catch(e => console.error(e));
+            fetch(DISCORD_NOTICE_WEBHOOK, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).catch(e => console.error("웹훅 전송 실패 (클라이언트 환경 차단):", e));
         }
 
         auth.onAuthStateChanged((user) => {
