@@ -43,11 +43,21 @@
         .logout-link { margin-left: 10px; font-size: 10px; color: #ff3333 !important; cursor: pointer; border: 1px solid #444; padding: 5px 10px; border-radius: 4px; font-weight: bold; }
         .logout-link:hover { background: rgba(255,255,255,0.1); }
 
-        /* --- HERO 영상 및 글리치 효과 CSS --- */
-        .hero { position: relative; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; overflow: hidden; }
-        .hero-video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translateX(-50%) translateY(-50%); z-index: -2; object-fit: cover; }
-        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: -1; }
+        /* --- HERO 섹션 CSS 수정 (배경 이미지 꽉 차게 + 그리드 패턴) --- */
+        .hero { 
+            position: relative; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; 
+            background: linear-gradient(to bottom, rgba(10, 10, 10, 0.7), #0a0a0a), 
+                        url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1920&q=80'); 
+            background-size: cover; background-position: center; background-attachment: fixed;
+        }
+        /* 사이버틱한 그리드 무늬 오버레이 */
+        .hero::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px; z-index: 1; pointer-events: none;
+        }
         
+        .hero-content { position: relative; z-index: 2; }
         .glitch { font-size: 8rem; margin: 0; letter-spacing: 20px; font-weight: 900; text-transform: uppercase; position: relative; color: white; text-shadow: 0 0 30px rgba(255, 94, 0, 0.8); }
         .glitch::before, .glitch::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent; }
         .glitch::before { left: 4px; text-shadow: -2px 0 #ff00c1; clip: rect(44px, 450px, 56px, 0); animation: glitch-anim 5s infinite linear alternate-reverse; }
@@ -117,20 +127,22 @@
 
         .discord-container { display: grid; grid-template-columns: 1fr 2fr; gap: 40px; background: #0d0d0d; padding: 40px; border-radius: 12px; border: 1px solid #222; align-items: center; }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-top: 50px; perspective: 1000px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-top: 50px; }
         
-        /* 3D 카드를 위한 CSS 변경 */
+        /* --- 스탯 카드 CSS 수정 (멀미나는 3D 효과 제거, 고급스러운 플랫 글로우 효과 적용) --- */
         .stat-card { 
-            background: rgba(17, 17, 17, 0.9); border: 1px solid #222; border-radius: 12px; padding: 35px; 
-            position: relative; 
-            transform-style: preserve-3d; transition: transform 0.1s ease, box-shadow 0.1s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            /* overflow: hidden; 지움 (3D 효과를 위해) */
+            background: rgba(20, 20, 20, 0.95); border: 1px solid #222; border-radius: 12px; padding: 35px; 
+            position: relative; overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
         }
-        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: #ff5e00; border-top-left-radius: 12px; border-top-right-radius: 12px; }
-        
-        /* 카드 내부 요소들을 조금씩 띄워서 입체감 부여 */
-        .card-header, .rank-badge, .mode-tabs, .match-type-tabs, .data-row { transform: translateZ(30px); }
+        /* 호버 시 부드럽게 떠오르며 주황색 네온 빛이 감돌도록 변경 */
+        .stat-card:hover { 
+            transform: translateY(-8px); 
+            border-color: #ff5e00; 
+            box-shadow: 0 15px 35px rgba(255, 94, 0, 0.2), 0 0 15px rgba(255, 94, 0, 0.1) inset; 
+        }
+        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: #ff5e00; }
         
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #222; }
         .player-name { font-size: 1.5rem; font-weight: 900; color: #fff; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
@@ -218,16 +230,12 @@
         </ul>
     </nav>
 
-    <!-- HREO 섹션 비디오 & 글리치 적용 -->
+    <!-- 배경 비디오 제거, 안정적인 이미지와 그리드 무늬로 대체 -->
     <section class="hero" id="home">
-        <!-- 배경 비디오 (추후 클랜 매드무비 mp4 링크로 교체 가능) -->
-        <video autoplay muted loop playsinline class="hero-video">
-            <source src="https://cdn.pixabay.com/video/2023/11/09/188445-883049280_large.mp4" type="video/mp4">
-        </video>
-        <div class="hero-overlay"></div>
-        
-        <h1 class="glitch" data-text="CLIX">CLIX</h1>
-        <p>BATTLEGROUND KOR CLIX</p>
+        <div class="hero-content">
+            <h1 class="glitch" data-text="CLIX">CLIX</h1>
+            <p>BATTLEGROUND KOR CLIX</p>
+        </div>
     </section>
 
     <section class="section" id="about">
@@ -397,39 +405,6 @@
             });
 
             grid.innerHTML = htmlContent;
-            
-            // 카드가 HTML에 그려진 후 3D 틸트 효과 적용!
-            applyTiltEffect();
-        }
-
-        // --- 3D 카드 틸트(Tilt) 애니메이션 함수 ---
-        function applyTiltEffect() {
-            const cards = document.querySelectorAll('.stat-card');
-            
-            cards.forEach(card => {
-                card.addEventListener('mousemove', (e) => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left; // 카드 내 마우스 X 좌표
-                    const y = e.clientY - rect.top;  // 카드 내 마우스 Y 좌표
-                    
-                    // 카드의 중심점 계산
-                    const centerX = rect.width / 2;
-                    const centerY = rect.height / 2;
-                    
-                    // 회전 각도 계산 (마우스가 중심에서 멀어질수록 많이 꺾임)
-                    const rotateX = ((y - centerY) / centerY) * -10; // 위아래 기울기
-                    const rotateY = ((x - centerX) / centerX) * 10;  // 좌우 기울기
-                    
-                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-                    card.style.boxShadow = `${-rotateY * 2}px ${rotateX * 2 + 15}px 30px rgba(255, 94, 0, 0.2)`;
-                });
-                
-                // 마우스가 카드에서 나가면 원상복구
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
-                    card.style.boxShadow = `0 10px 30px rgba(0, 0, 0, 0.5)`;
-                });
-            });
         }
 
         async function fetchAllPubgStats() {
@@ -562,7 +537,7 @@
                 `;
             }
         }
-        
+
         // --- 맵 그리기 로직 ---
         let canvas, ctx;
         let isDrawing = false;
