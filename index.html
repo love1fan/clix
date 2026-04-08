@@ -21,15 +21,11 @@
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line></svg>') 12 12, auto;
         }
 
-        /* 갤러리 아이템(gallery-item)에도 커스텀 포인터 추가 */
-        a, button, .auth-switch, .logout-link, .tool-btn, .map-nav-btn, .play-toggle, .tool-color, label, .gallery-item {
+        a, button, .auth-switch, .logout-link, .tool-btn, .map-nav-btn, .play-toggle, .tool-color, label, .gallery-item, .match-type-btn, .mode-btn {
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23ff5e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><circle cx="12" cy="12" r="2" fill="%23ff5e00"></circle></svg>') 12 12, pointer !important;
         }
         
-        #lock-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.98); z-index: 9999; 
-            display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; overflow-y: auto; padding: 20px 0; 
-        }
+        #lock-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.98); z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; overflow-y: auto; padding: 20px 0; }
         #lock-overlay h2 { font-size: 3.5rem; color: #ff5e00; margin-bottom: 20px; letter-spacing: 5px; font-weight: 900; text-transform: uppercase; }
         
         .auth-container { background: #111; padding: 40px; border-radius: 8px; border: 1px solid #222; width: 350px; box-sizing: border-box; }
@@ -41,10 +37,11 @@
         .live-status-bar { background: #1a1a1a; padding: 12px; text-align: center; border-bottom: 2px solid #ff5e00; font-size: 0.9rem; position: fixed; width: 100%; z-index: 101; top: 0; }
         .status-tag { background: #ff5e00; color: #fff; padding: 2px 8px; border-radius: 3px; font-weight: 800; margin-right: 10px; }
 
-        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; background: rgba(0,0,0,0.95) !important; position: fixed; width: 100%; box-sizing: border-box; z-index: 100; border-bottom: 1px solid #222; margin-top: 45px; }
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; background: rgba(0,0,0,0.95) !important; position: fixed; width: 100%; box-sizing: border-box; z-index: 100; border-bottom: 1px solid #222; margin-top: 45px; transition: all 0.3s; }
         nav .logo { font-weight: 900; font-size: 26px; color: #ff5e00 !important; letter-spacing: 2px; text-transform: uppercase; text-decoration: none !important; }
         nav ul { list-style: none; display: flex; margin: 0; padding: 0; align-items: center; }
-        nav ul li a { margin-left: 20px; font-size: 12px; font-weight: 600; color: #999 !important; text-decoration: none !important; text-transform: uppercase; }
+        nav ul li a { margin-left: 20px; font-size: 12px; font-weight: 600; color: #999 !important; text-decoration: none !important; text-transform: uppercase; transition: color 0.3s; }
+        nav ul li a:hover { color: #ff5e00 !important; }
         .logout-link { margin-left: 10px; font-size: 10px; color: #ff3333 !important; border: 1px solid #444; padding: 5px 10px; border-radius: 4px; font-weight: bold; }
         .logout-link:hover { background: rgba(255,255,255,0.1); }
 
@@ -63,16 +60,8 @@
         .section { padding: 120px 8%; max-width: 1200px; margin: 0 auto; }
         .section-title { font-size: 2.8rem; font-weight: 800; margin-bottom: 60px; text-align: center; letter-spacing: 8px; color: #ff5e00; text-transform: uppercase; }
 
-        /* ========================================= */
-        /* --- [NEW] 이달의 MVP & 하이라이트 CSS --- */
-        /* ========================================= */
         .mvp-container { display: flex; justify-content: center; margin-bottom: 80px; }
-        .mvp-card { 
-            background: linear-gradient(135deg, #1f1a00 0%, #000000 100%); border: 1px solid #ffd700; border-radius: 16px; 
-            padding: 40px; width: 100%; max-width: 600px; text-align: center; position: relative; overflow: hidden;
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.15), inset 0 0 20px rgba(255, 215, 0, 0.05);
-            transition: transform 0.3s;
-        }
+        .mvp-card { background: linear-gradient(135deg, #1f1a00 0%, #000000 100%); border: 1px solid #ffd700; border-radius: 16px; padding: 40px; width: 100%; max-width: 600px; text-align: center; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.15), inset 0 0 20px rgba(255, 215, 0, 0.05); transition: transform 0.3s; }
         .mvp-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(255, 215, 0, 0.25); }
         .mvp-card::before { content: '👑'; font-size: 8rem; position: absolute; top: -30px; right: -20px; opacity: 0.1; filter: grayscale(100%); transition: 0.5s; }
         .mvp-card:hover::before { filter: grayscale(0%); opacity: 0.3; transform: scale(1.1) rotate(15deg); }
@@ -95,13 +84,12 @@
         .play-icon svg { width: 24px; height: 24px; fill: #fff; margin-left: 4px; }
         .gallery-title { color: #fff; font-weight: 800; font-size: 1.2rem; margin: 0; text-transform: uppercase; }
         .gallery-date { color: #ff5e00; font-size: 0.75rem; font-weight: 700; }
-        /* ========================================= */
 
         .about-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
         .tag { padding: 15px 25px; background: #111; border-left: 3px solid #ff5e00; font-weight: 700; margin-right: 10px; display: inline-block; }
         .map-dashboard { background: #111; border: 1px solid #222; border-radius: 12px; overflow: hidden; }
         .map-nav { display: flex; background: #1a1a1a; }
-        .map-nav-btn { flex: 1; padding: 20px; border: none; background: none; color: #666; font-weight: 800; }
+        .map-nav-btn { flex: 1; padding: 20px; border: none; background: none; color: #666; font-weight: 800; transition: background 0.3s, color 0.3s; }
         .map-nav-btn.active { background: #ff5e00; color: white; }
         .map-content-area { padding: 30px; display: grid; grid-template-columns: 150px 1fr; gap: 30px; }
         
@@ -109,9 +97,9 @@
         .map-drawing-container img { width: 100%; height: auto; display: block; object-fit: cover; }
         #tactical-canvas { position: absolute; top: 0; left: 0; z-index: 10; touch-action: none; }
         .drawing-tools { display: flex; gap: 10px; margin-top: 10px; background: #1a1a1a; padding: 10px; border-radius: 8px; align-items: center; flex-wrap: wrap; }
-        .tool-btn { background: #333; color: #fff; border: 1px solid #444; padding: 5px 15px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
+        .tool-btn { background: #333; color: #fff; border: 1px solid #444; padding: 5px 15px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; transition: 0.2s; }
         .tool-btn.active { background: #ff5e00; border-color: #ff5e00; }
-        .tool-color { width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; }
+        .tool-color { width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; transition: 0.2s; }
         .tool-color.active { border-color: #fff; box-shadow: 0 0 5px #fff; }
 
         .stream-tabs { display: flex; gap: 10px; margin-bottom: 30px; justify-content: center; }
@@ -127,11 +115,13 @@
         #chat-messages { flex: 1; padding: 15px; overflow-y: auto; font-size: 0.85rem; color: #ccc; scroll-behavior: smooth; background: #080808; }
         .chat-msg-item { margin-bottom: 12px; padding: 10px 15px; background: rgba(255, 255, 255, 0.03); border-radius: 8px; border-left: 3px solid #333; transition: 0.2s; word-break: break-all; }
         .chat-msg-item:hover { background: rgba(255, 94, 0, 0.05); border-left-color: #ff5e00; }
-        .chat-nickname { display: block; font-weight: 900; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 1px; }
+        .chat-nickname { display: flex; align-items: center; gap: 5px; font-weight: 900; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 1px; }
+        .chat-badge { font-size: 0.8rem; }
         .chat-input-area { padding: 10px; border-top: 1px solid #222; display: flex; gap: 8px; background: #151515; }
-        #chat-input { flex: 1; background: #000; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 4px; font-size: 0.85rem; outline: none; }
+        #chat-input { flex: 1; background: #000; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 4px; font-size: 0.85rem; outline: none; transition: border-color 0.3s; }
         #chat-input:focus { border-color: #ff5e00; }
-        .chat-send-btn { background: #ff5e00; color: #fff; border: none; padding: 0 15px; border-radius: 4px; font-weight: 800; font-size: 0.8rem; }
+        .chat-send-btn { background: #ff5e00; color: #fff; border: none; padding: 0 15px; border-radius: 4px; font-weight: 800; font-size: 0.8rem; transition: background 0.3s; }
+        .chat-send-btn:hover { background: #e65500; }
         
         #chat-messages::-webkit-scrollbar { width: 4px; }
         #chat-messages::-webkit-scrollbar-track { background: #000; }
@@ -220,7 +210,7 @@
         <a href="#" class="logo">CLAN CLIX</a>
         <ul>
             <li><a href="#about">ABOUT</a></li>
-            <li><a href="#hall-of-fame">HALL OF FAME</a></li> <!-- 추가됨 -->
+            <li><a href="#hall-of-fame">HALL OF FAME</a></li>
             <li><a href="#stream">LIVE</a></li>
             <li><a href="#discord">DISCORD</a></li>
             <li><a href="notice.html">NOTICE</a></li>
@@ -241,7 +231,6 @@
         </div>
     </section>
 
-    <!-- 기존 ABOUT 섹션 -->
     <section class="section" id="about">
         <div class="about-wrapper" data-aos="fade-up">
             <div class="about-intro-box">
@@ -288,7 +277,6 @@
         </div>
     </section>
 
-    <!-- [NEW] HALL OF FAME (이달의 MVP) 섹션 -->
     <section class="section" id="hall-of-fame" style="background: #0d0d0d; border-top: 1px solid #222; border-bottom: 1px solid #222;">
         <h2 class="section-title" data-aos="fade-up">HALL OF FAME</h2>
         
@@ -314,38 +302,27 @@
             </div>
         </div>
 
-        <!-- [NEW] HIGHLIGHTS (갤러리) 섹션 -->
         <h2 class="section-title" data-aos="fade-up" style="font-size: 2rem; margin-top: 40px; margin-bottom: 40px; color: #fff;">CLIX HIGHLIGHTS</h2>
         <div class="gallery-grid" data-aos="fade-up" data-aos-delay="200">
-            <!-- 하이라이트 1 -->
             <div class="gallery-item" onclick="alert('영상 재생 기능 연결 예정입니다.')">
-                <!-- 이미지 소스는 원하는 배그 스크린샷으로 변경 가능 -->
                 <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80" alt="Highlight 1">
-                <div class="play-icon">
-                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                </div>
+                <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
                 <div class="gallery-overlay">
                     <span class="gallery-date">2026. 03. 15</span>
                     <p class="gallery-title">에란겔 1 vs 4 클러치</p>
                 </div>
             </div>
-            <!-- 하이라이트 2 -->
             <div class="gallery-item" onclick="alert('영상 재생 기능 연결 예정입니다.')">
                 <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80" alt="Highlight 2">
-                <div class="play-icon">
-                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                </div>
+                <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
                 <div class="gallery-overlay">
                     <span class="gallery-date">2026. 03. 10</span>
                     <p class="gallery-title">미라마 600m 저격 명장면</p>
                 </div>
             </div>
-            <!-- 하이라이트 3 -->
             <div class="gallery-item" onclick="alert('영상 재생 기능 연결 예정입니다.')">
                 <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=800&q=80" alt="Highlight 3">
-                <div class="play-icon">
-                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                </div>
+                <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
                 <div class="gallery-overlay">
                     <span class="gallery-date">2026. 03. 02</span>
                     <p class="gallery-title">스쿼드 전원 생존 완벽한 치킨</p>
@@ -441,6 +418,39 @@
         ];
 
         let statsState = {};
+
+        // --- [NEW] UI 사운드 효과 (Web Audio API) ---
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+
+        function playClickSound() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            // "틱" 하는 타격음 주파수 설정
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.05);
+            
+            // 볼륨 감쇄 설정
+            gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.05);
+        }
+
+        // 클릭 가능한 요소에 소리 이벤트 연결
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('button, a, .tool-color, .gallery-item, .match-type-btn, .mode-btn, .auth-switch')) {
+                playClickSound();
+            }
+        });
+        // ------------------------------------------
 
         function initStatCards() {
             const grid = document.getElementById('stats-grid');
@@ -957,7 +967,19 @@
                     const deleteBtn = isUserAdmin ? `<span onclick="deleteMessage('${msgId}')" style="color:#ff3333; cursor:pointer; float:right; font-size:10px; font-weight:bold;">[X]</span>` : "";
                     const nickColor = getNicknameColor(data.nickname);
 
-                    div.innerHTML = `${deleteBtn}<span class="chat-nickname" style="color: ${nickColor};">${data.nickname}</span><div class="chat-text" style="color: #eee;">${data.text}</div>`;
+                    // --- [NEW] 유저 뱃지 시스템 로직 ---
+                    let badge = '🔰'; // 기본 뱃지 (새싹)
+                    if (data.nickname === 'CLX_0dB' || data.isAdmin) {
+                        badge = '👑'; // 방장/관리자
+                    } else if (data.nickname.startsWith('CLX_') || CLAN_MEMBERS.some(m => m.nickname === data.nickname)) {
+                        badge = '🔫'; // 클랜원
+                    }
+
+                    div.innerHTML = `${deleteBtn}
+                        <span class="chat-nickname" style="color: ${nickColor};">
+                            <span class="chat-badge">${badge}</span> ${data.nickname}
+                        </span>
+                        <div class="chat-text" style="color: #eee;">${data.text}</div>`;
                     chatBox.appendChild(div);
                 });
                 chatBox.scrollTop = chatBox.scrollHeight;
