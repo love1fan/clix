@@ -72,7 +72,6 @@
         .section { padding: 120px 8%; max-width: 1200px; margin: 0 auto; }
         .section-title { font-size: 2.8rem; font-weight: 800; margin-bottom: 60px; text-align: center; letter-spacing: 8px; color: #ff5e00; text-transform: uppercase; }
 
-        /* 수정된 어바웃 섹션 레이아웃 (지도 제거됨) */
         .about-wrapper { display: flex; gap: 60px; align-items: center; flex-wrap: wrap; justify-content: space-between; }
         .about-intro-box { flex: 1; min-width: 300px; }
         .about-image-box { flex: 1; min-width: 300px; display: flex; justify-content: center; }
@@ -154,7 +153,7 @@
         @keyframes blink { 50% { opacity: 0.5; } }
 
         footer { padding: 80px; text-align: center; color: #444; border-top: 1px solid #222; text-transform: uppercase; }
-        @media (max-width: 900px) { .about-wrapper, .stats-grid, .stream-container, .discord-container { grid-template-columns: 1fr; } .glitch { font-size: 4rem; } .stream-container { height: auto; max-height: none; } }
+        @media (max-width: 900px) { .stats-grid, .stream-container, .discord-container { grid-template-columns: 1fr; } .glitch { font-size: 4rem; } .stream-container { height: auto; max-height: none; } }
 
         #music-player { position: fixed; bottom: 30px; left: 30px; background: rgba(0, 0, 0, 0.85); border: 1px solid #222; padding: 12px 20px; border-radius: 12px; display: flex; align-items: center; gap: 15px; z-index: 1000; backdrop-filter: blur(5px); transition: 0.3s; }
         #music-player:hover { border-color: #ff5e00; }
@@ -165,7 +164,6 @@
 </head>
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
 
-    <!-- 시네마틱 로딩 스크린 -->
     <div id="splash-screen">
         <h1 class="glitch" data-text="CLIX">CLIX</h1>
         <div class="loading-bar-container">
@@ -223,8 +221,8 @@
             <li><a href="notice.html">NOTICE</a></li>
             <li><a href="board.html">BOARD</a></li>
             <li><a href="scrim.html">SCRIM</a></li>
-            <!-- TACTICS 메뉴 추가 됨 -->
-            <li><a href="tactics.html" style="color:#ff5e00 !important; font-weight:800;">TACTICS</a></li>
+            <!-- TACTICS 색상 통일 (인라인 스타일 제거) -->
+            <li><a href="tactics.html">TACTICS</a></li>
             <li><a href="#members">STATS</a></li>
             <li><a href="members.html">MEMBERS</a></li>
             <li id="nav-user-info" style="color:#ff5e00; font-size:10px; margin-left:20px; font-weight: bold;"></li>
@@ -240,7 +238,6 @@
         </div>
     </section>
 
-    <!-- 수정된 ABOUT 섹션 (지도 제거, 이미지 및 링크 추가) -->
     <section class="section" id="about">
         <div class="about-wrapper" data-aos="fade-up">
             <div class="about-intro-box">
@@ -253,7 +250,6 @@
                 </div>
             </div>
             <div class="about-image-box">
-                <!-- 이미지는 원하시는 팀 사진이나 로고로 언제든 교체 가능합니다 -->
                 <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80" alt="CLIX CLAN">
             </div>
         </div>
@@ -372,7 +368,6 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     
     <script>
-        // 로딩 화면 페이드아웃
         window.addEventListener('load', () => { setTimeout(() => { const splash = document.getElementById('splash-screen'); if(splash) splash.classList.add('hidden'); }, 2500); });
 
         AOS.init({ duration: 800, once: true, offset: 100, easing: 'ease-out-cubic' });
