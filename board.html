@@ -5,26 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PUBG CLIX CLAN | BOARD</title>
     
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK (Storage 추가) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-storage-compat.js"></script>
 
     <!-- AOS (Animate On Scroll) CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
         /* 기본 스타일 */
-        body { 
-            margin: 0; font-family: 'Inter', 'Segoe UI', sans-serif; background-color: #0a0a0a; color: #ffffff; 
-            line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth;
-            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
-            cursor: url('data:image/svg+xml;utf8,<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4 L22 11 L13 14 L9 24 Z" fill="%23ffffff" stroke="%23000000" stroke-width="1.5"/></svg>') 4 4, auto;
-        }
-
-        a, button, .logout-link, .board-row, .modal-close {
-            cursor: url('data:image/svg+xml;utf8,<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4 L22 11 L13 14 L9 24 Z" fill="%23ff5e00" stroke="%23ffffff" stroke-width="1.5"/></svg>') 4 4, pointer !important;
-        }
+        body { margin: 0; font-family: 'Inter', 'Segoe UI', sans-serif; background-color: #0a0a0a; color: #ffffff; line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; cursor: url('data:image/svg+xml;utf8,<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4 L22 11 L13 14 L9 24 Z" fill="%23ffffff" stroke="%23000000" stroke-width="1.5"/></svg>') 4 4, auto; }
+        a, button, .logout-link, .board-row, .modal-close, label[for="write-file"] { cursor: url('data:image/svg+xml;utf8,<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4 L22 11 L13 14 L9 24 Z" fill="%23ff5e00" stroke="%23ffffff" stroke-width="1.5"/></svg>') 4 4, pointer !important; }
 
         /* 로그인 잠금 화면 */
         #lock-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.98); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
@@ -36,7 +29,6 @@
         /* 상태바 & 네비게이션 */
         .live-status-bar { background: #1a1a1a; padding: 12px; text-align: center; border-bottom: 2px solid #ff5e00; font-size: 0.9rem; position: fixed; width: 100%; z-index: 101; top: 0; }
         .status-tag { background: #ff5e00; color: #fff; padding: 2px 8px; border-radius: 3px; font-weight: 800; margin-right: 10px; }
-
         nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; background: rgba(0,0,0,0.95) !important; position: fixed; width: 100%; box-sizing: border-box; z-index: 100; border-bottom: 1px solid #222; top: 45px; }
         nav .logo { font-weight: 900; font-size: 26px; color: #ff5e00 !important; letter-spacing: 2px; text-transform: uppercase; text-decoration: none !important; }
         nav ul { list-style: none; display: flex; margin: 0; padding: 0; align-items: center; }
@@ -52,7 +44,6 @@
 
         /* 게시판 스타일 */
         .board-container { max-width: 1200px; margin: 40px auto 80px auto; padding: 0 8%; min-height: 50vh; position: relative; z-index: 10; }
-        
         .board-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .board-count { color: #888; font-size: 0.9rem; }
         .btn-write { display: block; background: #ff5e00; color: #fff; border: none; padding: 10px 20px; font-weight: 800; border-radius: 4px; transition: 0.3s; }
@@ -60,16 +51,17 @@
 
         .board-list { border-top: 2px solid #ff5e00; background: #111; border-radius: 0 0 8px 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .board-header-row { display: grid; grid-template-columns: 80px 1fr 120px 120px; padding: 15px 20px; background: #1a1a1a; font-weight: 800; color: #888; font-size: 0.85rem; text-align: center; border-bottom: 1px solid #333; }
-        
         .board-row { display: grid; grid-template-columns: 80px 1fr 120px 120px; padding: 18px 20px; border-bottom: 1px solid #222; align-items: center; text-align: center; transition: all 0.2s; background: #0d0d0d; }
         .board-row:hover { background: rgba(255, 94, 0, 0.05); border-left: 3px solid #ff5e00; transform: translateX(5px); }
         
         .col-id { color: #666; font-size: 0.9rem; }
-        .col-title { text-align: left; font-weight: 700; color: #eee; padding: 0 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .col-title { text-align: left; font-weight: 700; color: #eee; padding: 0 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
         .col-author { color: #aaa; font-size: 0.85rem; font-weight: 600; }
         .col-date { color: #666; font-size: 0.8rem; }
-
         .empty-board { text-align: center; padding: 60px 0; color: #666; font-weight: bold; }
+
+        /* 첨부파일 아이콘 */
+        .attach-icon { display: inline-block; background: #333; color: #aaa; font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
 
         /* 모달 스타일 */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
@@ -81,20 +73,32 @@
         #read-title { font-size: 1.8rem; color: #fff; font-weight: 900; margin: 0 0 15px 0; word-break: keep-all; }
         .read-info { display: flex; gap: 15px; color: #888; font-size: 0.85rem; padding-bottom: 20px; border-bottom: 1px solid #333; margin-bottom: 30px; }
         .read-info-badge { background: #333; padding: 2px 8px; border-radius: 4px; color: #fff; font-weight: bold; }
-        #read-body { color: #ddd; line-height: 1.8; white-space: pre-wrap; font-size: 1rem; min-height: 200px; }
+        #read-media-container { margin-bottom: 20px; text-align: center; }
+        #read-media-container img, #read-media-container video { max-width: 100%; border-radius: 8px; border: 1px solid #333; max-height: 500px; }
+        #read-body { color: #ddd; line-height: 1.8; white-space: pre-wrap; font-size: 1rem; min-height: 100px; }
         .admin-controls { margin-top: 30px; padding-top: 20px; border-top: 1px solid #333; display: none; text-align: right; }
 
         /* 글 쓰기 모달 */
-        .write-input { width: 100%; background: #0a0a0a; border: 1px solid #333; color: #fff; padding: 15px; font-family: inherit; font-size: 1rem; margin-bottom: 20px; border-radius: 4px; box-sizing: border-box; }
+        .write-input { width: 100%; background: #0a0a0a; border: 1px solid #333; color: #fff; padding: 15px; font-family: inherit; font-size: 1rem; margin-bottom: 15px; border-radius: 4px; box-sizing: border-box; }
         .write-input:focus { outline: none; border-color: #ff5e00; box-shadow: 0 0 10px rgba(255,94,0,0.2); }
-        textarea.write-input { height: 300px; resize: none; }
+        textarea.write-input { height: 250px; resize: none; }
+        
+        /* 업로드 UI */
+        .file-upload-wrapper { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; background: #1a1a1a; padding: 10px; border-radius: 4px; border: 1px dashed #444; }
+        .file-upload-wrapper label { background: #333; color: #fff; padding: 8px 15px; border-radius: 4px; font-size: 0.85rem; font-weight: bold; transition: 0.3s; }
+        .file-upload-wrapper label:hover { background: #ff5e00; }
+        #file-name-display { font-size: 0.85rem; color: #888; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 250px; }
+        
+        #upload-progress-container { display: none; margin-bottom: 20px; }
+        .progress-bar-bg { background: #222; height: 8px; border-radius: 4px; overflow: hidden; }
+        #upload-progress-bar { background: #ff5e00; height: 100%; width: 0%; transition: width 0.1s; }
+        #upload-status-text { font-size: 0.75rem; color: #aaa; margin-top: 5px; text-align: right; }
 
         footer { padding: 40px; text-align: center; color: #444; border-top: 1px solid #222; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-    <!-- 미로그인 시 접근 차단 화면 -->
     <div id="lock-overlay">
         <h2>CLIX MEMBERS ONLY</h2>
         <div class="auth-container">
@@ -103,12 +107,10 @@
         </div>
     </div>
 
-    <!-- 상단 상태바 -->
     <div class="live-status-bar">
         <span class="status-tag">LIVE</span> 서버 상태: <span style="color: #4ee29d;">정상</span> | 오늘의 맵: <span style="color: #fff;">에란겔 / 미라마 / 비켄디 / 테이고 / 론도</span>
     </div>
 
-    <!-- 네비게이션 (BOARD 강조) -->
     <nav>
         <a href="index.html" class="logo">CLAN CLIX</a>
         <ul>
@@ -127,17 +129,14 @@
         </ul>
     </nav>
 
-    <!-- 페이지 헤더 -->
     <header class="page-header" data-aos="fade-down">
         <h1 class="page-title">FREE BOARD</h1>
-        <p class="page-subtitle">클랜원 자유게시판 (게임 팁, 일상 공유)</p>
+        <p class="page-subtitle">클랜원 자유게시판 (사진, 영상, 일상 공유)</p>
     </header>
 
-    <!-- 게시판 영역 -->
     <div class="board-container" data-aos="fade-up" data-aos-delay="100">
         <div class="board-top">
             <div class="board-count">전체 게시글 <span id="total-count" style="color:#ff5e00; font-weight:bold;">0</span>건</div>
-            <!-- 누구나 작성 가능하므로 항상 표시됨 -->
             <button class="btn-write" onclick="openWriteModal()">게시글 작성</button>
         </div>
 
@@ -163,9 +162,12 @@
                 <span id="read-author" class="read-info-badge">작성자</span>
                 <span id="read-date">작성일: 2026.04.10</span>
             </div>
+            
+            <!-- 미디어(사진/영상) 렌더링 영역 -->
+            <div id="read-media-container"></div>
+            
             <div id="read-body">본문 내용이 여기에 표시됩니다.</div>
             
-            <!-- 작성자 본인 또는 관리자만 볼 수 있는 삭제 버튼 -->
             <div class="admin-controls" id="read-admin-controls">
                 <button class="auth-btn" style="width:auto; background:#ff3333; padding:10px 20px;" onclick="deleteBoard()">삭제하기</button>
             </div>
@@ -178,8 +180,23 @@
             <button class="modal-close" onclick="closeModal('write-modal')">&times;</button>
             <h2 style="color:#ff5e00; margin-bottom:20px;">게시글 작성</h2>
             <input type="text" id="write-title" class="write-input" placeholder="제목을 입력하세요">
-            <textarea id="write-content" class="write-input" placeholder="클랜원들과 나누고 싶은 이야기를 적어주세요. 욕설 및 비방은 제재 대상입니다."></textarea>
-            <button class="auth-btn" onclick="submitBoard()">등록하기</button>
+            
+            <!-- 첨부파일 UI -->
+            <div class="file-upload-wrapper">
+                <label for="write-file">사진/영상 첨부</label>
+                <input type="file" id="write-file" accept="image/*,video/*" style="display:none;" onchange="updateFileName()">
+                <span id="file-name-display">선택된 파일 없음</span>
+                <button type="button" id="btn-cancel-file" onclick="cancelFile()" style="display:none; background:none; border:none; color:#ff3333; font-weight:bold; font-size:12px;">X 취소</button>
+            </div>
+
+            <!-- 업로드 프로그레스 바 -->
+            <div id="upload-progress-container">
+                <div class="progress-bar-bg"><div id="upload-progress-bar"></div></div>
+                <div id="upload-status-text">업로드 준비 중...</div>
+            </div>
+
+            <textarea id="write-content" class="write-input" placeholder="클랜원들과 나누고 싶은 이야기를 적어주세요."></textarea>
+            <button id="btn-submit" class="auth-btn" onclick="submitBoard()">등록하기</button>
         </div>
     </div>
 
@@ -191,33 +208,24 @@
     <script>
         AOS.init({ duration: 800, once: true });
 
-        // Firebase 설정 (index.html, notice.html과 동일)
-        const firebaseConfig = { 
-            apiKey: "AIzaSyAFSAu2aynX6YPiJEatWy9IQgWgUuTx8ds", 
-            authDomain: "korclix.firebaseapp.com", 
-            projectId: "korclix", 
-            storageBucket: "korclix.firebasestorage.app", 
-            messagingSenderId: "472792477536", 
-            appId: "1:472792477536:web:14907e228c343b72fd7805" 
-        };
+        const firebaseConfig = { apiKey: "AIzaSyAFSAu2aynX6YPiJEatWy9IQgWgUuTx8ds", authDomain: "korclix.firebaseapp.com", projectId: "korclix", storageBucket: "korclix.firebasestorage.app", messagingSenderId: "472792477536", appId: "1:472792477536:web:14907e228c343b72fd7805" };
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         
         const auth = firebase.auth();
         const db = firebase.firestore();
+        const storage = firebase.storage();
 
         let isUserAdmin = false; 
         let userNick = "";
-        let userId = ""; // 본인 글인지 확인하기 위한 uid 저장
-        let currentReadId = null;
-        let currentReadAuthorUid = null;
+        let userId = ""; 
+        let currentReadDoc = null; // 현재 읽고 있는 글의 전체 데이터 객체
+        let boardsDataList = []; // 게시글 데이터를 메모리에 저장
 
-        // 인증 상태 확인
         auth.onAuthStateChanged((user) => {
             const overlay = document.getElementById('lock-overlay');
             if (user && user.emailVerified) {
                 overlay.style.display = 'none';
                 userId = user.uid;
-
                 db.collection("users").doc(user.uid).get().then((doc) => {
                     if (doc.exists) { 
                         const data = doc.data(); 
@@ -228,28 +236,28 @@
                         isUserAdmin = false; 
                     }
                     document.getElementById('nav-user-info').innerText = userNick + "님"; 
-                    
                     loadBoards();
                 });
             } else { overlay.style.display = 'flex'; }
         });
 
-        // 게시글 불러오기 (최신순 정렬)
+        // 1. 게시글 목록 불러오기
         function loadBoards() {
             const boardBody = document.getElementById('board-body');
             const totalCountSpan = document.getElementById('total-count');
 
-            // 'boards' 컬렉션 사용
             db.collection("boards").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
                 if (snapshot.empty) {
                     boardBody.innerHTML = '<div class="empty-board">등록된 게시글이 없습니다. 첫 글의 주인공이 되어보세요!</div>';
                     totalCountSpan.innerText = "0";
+                    boardsDataList = [];
                     return;
                 }
 
                 boardBody.innerHTML = "";
                 totalCountSpan.innerText = snapshot.docs.length;
                 let listNum = snapshot.docs.length;
+                boardsDataList = []; // 초기화
 
                 snapshot.forEach((doc) => {
                     const data = doc.data();
@@ -257,13 +265,21 @@
                     const dateObj = data.createdAt ? data.createdAt.toDate() : new Date();
                     const dateStr = `${dateObj.getFullYear()}.${String(dateObj.getMonth() + 1).padStart(2, '0')}.${String(dateObj.getDate()).padStart(2, '0')}`;
                     
-                    // 작성자 UID가 없을 경우를 대비한 예외 처리
-                    const authorUid = data.authorUid || 'unknown';
+                    // 메모리에 저장 (따옴표 에러 방지)
+                    boardsDataList.push({ id: docId, ...data, dateStr: dateStr });
+
+                    // 첨부파일 여부에 따른 아이콘 표시
+                    let attachIcon = '';
+                    if(data.mediaUrl) {
+                        attachIcon = data.mediaType.includes('video') 
+                            ? `<span class="attach-icon">▶ VID</span>` 
+                            : `<span class="attach-icon">📷 IMG</span>`;
+                    }
 
                     const rowHtml = `
-                        <div class="board-row" onclick="readBoard('${docId}', '${data.title.replace(/'/g, "\\'")}', '${data.author}', '${dateStr}', \`${data.content.replace(/`/g, "\\`")}\`, '${authorUid}')">
+                        <div class="board-row" onclick="readBoard('${docId}')">
                             <div class="col-id">${listNum--}</div>
-                            <div class="col-title">${data.title}</div>
+                            <div class="col-title">${data.title} ${attachIcon}</div>
                             <div class="col-author">${data.author}</div>
                             <div class="col-date">${dateStr}</div>
                         </div>
@@ -271,68 +287,173 @@
                     boardBody.insertAdjacentHTML('beforeend', rowHtml);
                 });
             }, (error) => {
-                console.error("게시판 로드 에러:", error);
                 boardBody.innerHTML = `<div class="empty-board" style="color:#ff3333;">에러 발생: 콘솔(F12)을 확인하세요.</div>`;
             });
         }
 
-        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
-        
-        function readBoard(id, title, author, date, content, authorUid) {
-            currentReadId = id;
-            currentReadAuthorUid = authorUid;
+        // 2. 글 읽기 (미디어 렌더링 포함)
+        function readBoard(docId) {
+            const docData = boardsDataList.find(b => b.id === docId);
+            if(!docData) return;
+            currentReadDoc = docData;
 
-            document.getElementById('read-title').innerText = title;
-            document.getElementById('read-author').innerText = author;
-            document.getElementById('read-date').innerText = "작성일: " + date;
-            document.getElementById('read-body').innerText = content;
+            document.getElementById('read-title').innerText = docData.title;
+            document.getElementById('read-author').innerText = docData.author;
+            document.getElementById('read-date').innerText = "작성일: " + docData.dateStr;
+            document.getElementById('read-body').innerText = docData.content;
             
-            // 삭제 버튼 권한 체크: 내가 쓴 글이거나 관리자면 표시
-            const adminControls = document.getElementById('read-admin-controls');
-            if (isUserAdmin || userId === authorUid) {
-                adminControls.style.display = 'block';
-            } else {
-                adminControls.style.display = 'none';
+            // 미디어 컨테이너 초기화 및 렌더링
+            const mediaContainer = document.getElementById('read-media-container');
+            mediaContainer.innerHTML = "";
+            
+            if(docData.mediaUrl) {
+                if(docData.mediaType.includes('image')) {
+                    mediaContainer.innerHTML = `<img src="${docData.mediaUrl}" alt="첨부 이미지">`;
+                } else if(docData.mediaType.includes('video')) {
+                    mediaContainer.innerHTML = `<video src="${docData.mediaUrl}" controls autoplay muted loop></video>`;
+                }
             }
 
+            const adminControls = document.getElementById('read-admin-controls');
+            adminControls.style.display = (isUserAdmin || userId === docData.authorUid) ? 'block' : 'none';
+
             document.getElementById('read-modal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) { 
+            document.getElementById(modalId).style.display = 'none'; 
+            if(modalId === 'read-modal') {
+                document.getElementById('read-media-container').innerHTML = ""; // 영상 소리 멈춤
+            }
+        }
+        
+        // 3. 파일 관련 UI 함수
+        function updateFileName() {
+            const fileInput = document.getElementById('write-file');
+            const fileNameDisplay = document.getElementById('file-name-display');
+            const cancelBtn = document.getElementById('btn-cancel-file');
+            
+            if(fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                if(file.size > 50 * 1024 * 1024) { // 50MB 제한
+                    alert("파일 크기는 50MB를 초과할 수 없습니다.");
+                    cancelFile();
+                    return;
+                }
+                fileNameDisplay.innerText = file.name;
+                fileNameDisplay.style.color = "#ff5e00";
+                cancelBtn.style.display = "inline-block";
+            } else {
+                cancelFile();
+            }
+        }
+
+        function cancelFile() {
+            document.getElementById('write-file').value = "";
+            document.getElementById('file-name-display').innerText = "선택된 파일 없음";
+            document.getElementById('file-name-display').style.color = "#aaa";
+            document.getElementById('btn-cancel-file').style.display = "none";
         }
 
         function openWriteModal() {
             document.getElementById('write-title').value = '';
             document.getElementById('write-content').value = '';
+            cancelFile();
+            document.getElementById('upload-progress-container').style.display = 'none';
             document.getElementById('write-modal').style.display = 'flex';
         }
 
-        function submitBoard() {
+        // 4. 글쓰기 및 파일 업로드 로직
+        async function submitBoard() {
             const title = document.getElementById('write-title').value.trim();
             const content = document.getElementById('write-content').value.trim();
+            const fileInput = document.getElementById('write-file');
+            const file = fileInput.files[0];
+            const btnSubmit = document.getElementById('btn-submit');
 
             if (!title || !content) return alert("제목과 내용을 모두 입력해주세요.");
 
-            db.collection("boards").add({
-                title: title,
-                content: content,
-                author: userNick,
-                authorUid: userId, // 삭제 권한 확인을 위해 UID 저장
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
+            btnSubmit.disabled = true;
+            btnSubmit.innerText = "처리 중...";
+
+            let mediaUrl = null;
+            let mediaType = null;
+            let storagePath = null;
+
+            try {
+                // 파일이 있을 경우 스토리지 업로드 진행
+                if(file) {
+                    document.getElementById('upload-progress-container').style.display = 'block';
+                    const ext = file.name.split('.').pop();
+                    storagePath = `board_media/${Date.now()}_${userId}.${ext}`;
+                    const storageRef = storage.ref().child(storagePath);
+                    
+                    const uploadTask = storageRef.put(file);
+
+                    await new Promise((resolve, reject) => {
+                        uploadTask.on('state_changed', 
+                            (snapshot) => {
+                                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                                document.getElementById('upload-progress-bar').style.width = progress + '%';
+                                document.getElementById('upload-status-text').innerText = `업로드 중... ${Math.round(progress)}%`;
+                            }, 
+                            (error) => { reject(error); }, 
+                            async () => {
+                                mediaUrl = await uploadTask.snapshot.ref.getDownloadURL();
+                                mediaType = file.type;
+                                resolve();
+                            }
+                        );
+                    });
+                }
+
+                // DB에 게시글 정보 저장
+                await db.collection("boards").add({
+                    title: title,
+                    content: content,
+                    author: userNick,
+                    authorUid: userId,
+                    mediaUrl: mediaUrl,
+                    mediaType: mediaType,
+                    storagePath: storagePath, // 나중에 파일 삭제를 위해 경로 저장
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
                 alert("게시글이 등록되었습니다.");
                 closeModal('write-modal');
-            }).catch((error) => {
+
+            } catch (error) {
                 alert("등록 실패: " + error.message);
-            });
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.innerText = "등록하기";
+                document.getElementById('upload-progress-container').style.display = 'none';
+            }
         }
 
-        function deleteBoard() {
-            if(!currentReadId) return;
-            if(confirm("정말 이 게시글을 삭제하시겠습니까?\n(삭제 후 복구할 수 없습니다.)")) {
-                db.collection("boards").doc(currentReadId).delete().then(() => {
-                    alert("삭제되었습니다.");
-                    closeModal('read-modal');
-                }).catch((error) => {
-                    alert("삭제 실패: " + error.message);
-                });
+        // 5. 게시글 삭제 (스토리지 파일도 함께 삭제)
+        async function deleteBoard() {
+            if(!currentReadDoc) return;
+            if(!confirm("정말 이 게시글을 삭제하시겠습니까?\n(포함된 사진/영상도 함께 삭제됩니다.)")) return;
+
+            const docId = currentReadDoc.id;
+            const storagePath = currentReadDoc.storagePath;
+
+            try {
+                // 1. 파이어베이스 스토리지 파일 삭제 (파일이 존재했던 글이라면)
+                if(storagePath) {
+                    const storageRef = storage.ref().child(storagePath);
+                    await storageRef.delete().catch(err => console.log("파일이 이미 삭제되었거나 없습니다.", err));
+                }
+
+                // 2. 파이어베이스 Firestore 문서 삭제
+                await db.collection("boards").doc(docId).delete();
+
+                alert("삭제되었습니다.");
+                closeModal('read-modal');
+
+            } catch (error) {
+                alert("삭제 중 오류가 발생했습니다: " + error.message);
             }
         }
 
@@ -340,5 +461,7 @@
             if(confirm("로그아웃 하시겠습니까?")) { auth.signOut().then(() => { location.href = 'index.html'; }); }
         }
     </script>
+</body>
+</html>
 </body>
 </html>
