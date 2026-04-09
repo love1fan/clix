@@ -30,7 +30,7 @@
         /* 🚀 커스텀 알림창(SweetAlert2) CLIX 스타일 오버라이딩 */
         .swal2-popup { background: #111 !important; border: 1px solid #333 !important; border-top: 4px solid #ff5e00 !important; color: #fff !important; border-radius: 8px !important; }
         .swal2-title { color: #fff !important; font-weight: 900 !important; font-size: 1.5rem !important; }
-        .swal2-html-container { color: #aaa !important; font-weight: bold !important; }
+        .swal2-html-container { color: #aaa !important; font-weight: bold !important; line-height: 1.6 !important; }
         .swal2-confirm { background: #ff5e00 !important; color: #fff !important; font-weight: 900 !important; border-radius: 4px !important; padding: 12px 25px !important; }
         .swal2-cancel { background: #333 !important; color: #fff !important; font-weight: 900 !important; border-radius: 4px !important; padding: 12px 25px !important; }
         .swal2-confirm:hover { background: #e65500 !important; }
@@ -112,6 +112,7 @@
         .modal-header { padding: 40px 40px 20px 40px; border-bottom: 1px solid #222; position: relative; }
         .modal-body { padding: 30px 40px 40px 40px; }
         
+        /* 닫기 버튼이 무조건 최상단에 오도록 z-index 100 추가 */
         .modal-close { position: absolute; top: 25px; right: 30px; background: none; border: none; color: #666; font-size: 2.5rem; transition: 0.3s; line-height: 1; z-index: 100; }
         .modal-close:hover { color: #ff5e00; transform: scale(1.1) rotate(90deg); }
 
@@ -363,14 +364,20 @@
             document.getElementById('write-modal').style.display = 'flex';
         }
 
-        // 🚀 등록 시 SweetAlert 적용
+        // 🚀 등록 시 SweetAlert 적용 + 엔터 안내 문구 추가
         function submitNotice() {
             const title = document.getElementById('write-title').value.trim();
             const content = document.getElementById('write-content').value.trim();
             const isPinned = document.getElementById('write-pin').checked;
 
             if (!title || !content) {
-                Swal.fire({ icon: 'warning', title: '입력 오류', text: '제목과 내용을 모두 입력해주세요.', background: '#111', color: '#fff' });
+                Swal.fire({ 
+                    icon: 'warning', 
+                    title: '입력 오류', 
+                    html: '제목과 내용을 모두 입력해주세요.<br><br><span style="color:#ff5e00; font-size:0.85rem;">* 버튼이 클릭되지 않으면 엔터(Enter) 키를 눌러주세요.</span>', 
+                    background: '#111', 
+                    color: '#fff' 
+                });
                 return;
             }
 
@@ -381,20 +388,33 @@
                 isPinned: isPinned,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
-                Swal.fire({ icon: 'success', title: '등록 완료', text: '공지사항이 성공적으로 등록되었습니다.', background: '#111', color: '#fff', confirmButtonColor: '#ff5e00' });
+                Swal.fire({ 
+                    icon: 'success', 
+                    title: '등록 완료', 
+                    html: '공지사항이 성공적으로 등록되었습니다.<br><br><span style="color:#ff5e00; font-size:0.85rem;">* 버튼이 클릭되지 않으면 엔터(Enter) 키를 눌러주세요.</span>', 
+                    background: '#111', 
+                    color: '#fff', 
+                    confirmButtonColor: '#ff5e00' 
+                });
                 closeModal('write-modal');
             }).catch((error) => {
-                Swal.fire({ icon: 'error', title: '등록 실패', text: error.message, background: '#111', color: '#fff' });
+                Swal.fire({ 
+                    icon: 'error', 
+                    title: '등록 실패', 
+                    html: error.message + '<br><br><span style="color:#ff5e00; font-size:0.85rem;">* 버튼이 클릭되지 않으면 엔터(Enter) 키를 눌러주세요.</span>', 
+                    background: '#111', 
+                    color: '#fff' 
+                });
             });
         }
 
-        // 🚀 삭제 시 SweetAlert 적용 (오류 해결됨!)
+        // 🚀 삭제 시 SweetAlert 적용 + 엔터 안내 문구 추가
         function deleteNotice() {
             if(!currentReadId) return;
             
             Swal.fire({
                 title: '공지사항 삭제',
-                text: "정말 이 공지사항을 삭제하시겠습니까? (복구 불가)",
+                html: "정말 이 공지사항을 삭제하시겠습니까? (복구 불가)<br><br><span style='color:#ff5e00; font-size:0.85rem;'>* 버튼이 클릭되지 않으면 엔터(Enter) 키를 눌러주세요.</span>",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#ff3333',
@@ -406,20 +426,33 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     db.collection("notices").doc(currentReadId).delete().then(() => {
-                        Swal.fire({ icon: 'success', title: '삭제 완료', text: '공지사항이 삭제되었습니다.', background: '#111', color: '#fff', confirmButtonColor: '#ff5e00' });
+                        Swal.fire({ 
+                            icon: 'success', 
+                            title: '삭제 완료', 
+                            html: '공지사항이 삭제되었습니다.<br><br><span style="color:#ff5e00; font-size:0.85rem;">* 버튼이 클릭되지 않으면 엔터(Enter) 키를 눌러주세요.</span>', 
+                            background: '#111', 
+                            color: '#fff', 
+                            confirmButtonColor: '#ff5e00' 
+                        });
                         closeModal('read-modal');
                     }).catch((error) => {
-                        Swal.fire({ icon: 'error', title: '삭제 실패', text: error.message, background: '#111', color: '#fff' });
+                        Swal.fire({ 
+                            icon: 'error', 
+                            title: '삭제 실패', 
+                            html: error.message + '<br><br><span style="color:#ff5e00; font-size:0.85rem;">* 버튼이 클릭되지 않으면 엔터(Enter) 키를 눌러주세요.</span>', 
+                            background: '#111', 
+                            color: '#fff' 
+                        });
                     });
                 }
             });
         }
 
-        // 🚀 로그아웃 시 SweetAlert 적용
+        // 🚀 로그아웃 시 SweetAlert 적용 + 엔터 안내 문구 추가
         function logout() {
             Swal.fire({
                 title: 'LOGOUT',
-                text: "로그아웃 하시겠습니까?",
+                html: "로그아웃 하시겠습니까?<br><br><span style='color:#ff5e00; font-size:0.85rem;'>* 버튼이 클릭되지 않으면 엔터(Enter) 키를 눌러주세요.</span>",
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#ff5e00',
