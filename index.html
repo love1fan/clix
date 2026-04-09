@@ -88,9 +88,9 @@
         @keyframes glitch-anim { 0% { clip: rect(10px, 9999px, 86px, 0); } 20% { clip: rect(32px, 9999px, 12px, 0); } 40% { clip: rect(74px, 9999px, 43px, 0); } 60% { clip: rect(21px, 9999px, 98px, 0); } 80% { clip: rect(54px, 9999px, 32px, 0); } 100% { clip: rect(89px, 9999px, 65px, 0); } }
         @keyframes glitch-anim2 { 0% { clip: rect(65px, 9999px, 100px, 0); } 20% { clip: rect(12px, 9999px, 78px, 0); } 40% { clip: rect(43px, 9999px, 21px, 0); } 60% { clip: rect(87px, 9999px, 54px, 0); } 80% { clip: rect(34px, 9999px, 99px, 0); } 100% { clip: rect(11px, 9999px, 44px, 0); } }
         
-        /* 타이핑 효과 텍스트 */
+        /* 타이핑 효과 텍스트 (잘림 현상 해결) */
         .typing-text { font-size: 1.2rem; letter-spacing: 5px; font-weight: bold; color: #4ee29d; margin-top: 10px; text-transform: uppercase; white-space: nowrap; overflow: hidden; border-right: 3px solid #ff5e00; width: 0; animation: typing 3.5s steps(40, end) forwards, blink-caret 0.75s step-end infinite; text-shadow: 0 0 10px rgba(78, 226, 157, 0.5); }
-        @keyframes typing { from { width: 0 } to { width: 440px } } /* 글자 길이에 맞춰 조절됨 */
+        @keyframes typing { from { width: 0 } to { width: 40ch; } } /* 40ch = 40글자 길이만큼 넉넉하게 확보! */
         @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: #ff5e00; } }
 
         /* 🔥 퀵 런치(바로가기) 메뉴 카드 */
