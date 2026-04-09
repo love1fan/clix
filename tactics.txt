@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PUBG CLIX CLAN | TACTICS</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-storage-compat.js"></script>
+
+    <!-- AOS (Animate On Scroll) CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        /* 기본 스타일 및 커스텀 커서 */
+        body { margin: 0; font-family: 'Inter', 'Segoe UI', sans-serif; background-color: #0a0a0a; color: #ffffff; line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth; -webkit-user-select: none; user-select: none; cursor: url('data:image/svg+xml;utf8,<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4 L22 11 L13 14 L9 24 Z" fill="%23ffffff" stroke="%23000000" stroke-width="1.5"/></svg>') 4 4, auto; }
+        a, button, .logout-link, .modal-close, label[for="write-file"], .tactic-card, .cat-btn { cursor: url('data:image/svg+xml;utf8,<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4 L22 11 L13 14 L9 24 Z" fill="%23ff5e00" stroke="%23ffffff" stroke-width="1.5"/></svg>') 4 4, pointer !important; }
+
+        /* 로그인 잠금 화면 */
+        #lock-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.98); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        #lock-overlay h2 { font-size: 3.5rem; color: #ff5e00; margin-bottom: 20px; letter-spacing: 5px; font-weight: 900; }
+        .auth-container { background: #111; padding: 40px; border-radius: 8px; border: 1px solid #222; width: 350px; }
+        .auth-btn { width: 100%; padding: 15px; background: #ff5e00; color: white; border: none; font-weight: 800; font-size: 1rem; text-transform: uppercase; transition: 0.3s; }
+        .auth-btn:hover { background: #e65500; box-shadow: 0 0 15px rgba(255,94,0,0.4); }
+
+        /* 상태바 & 네비게이션 */
+        .live-status-bar { background: #1a1a1a; padding: 12px; text-align: center; border-bottom: 2px solid #ff5e00; font-size: 0.9rem; position: fixed; width: 100%; z-index: 101; top: 0; }
+        .status-tag { background: #ff5e00; color: #fff; padding: 2px 8px; border-radius: 3px; font-weight: 800; margin-right: 10px; }
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; background: rgba(0,0,0,0.95) !important; position: fixed; width: 100%; box-sizing: border-box; z-index: 100; border-bottom: 1px solid #222; top: 45px; }
+        nav .logo { font-weight: 900; font-size: 26px; color: #ff5e00 !important; letter-spacing: 2px; text-transform: uppercase; text-decoration: none !important; }
+        nav ul { list-style: none; display: flex; margin: 0; padding: 0; align-items: center; }
+        nav ul li a { margin-left: 20px; font-size: 12px; font-weight: 600; color: #999 !important; text-decoration: none !important; text-transform: uppercase; transition: color 0.3s; }
+        nav ul li a:hover { color: #ff5e00 !important; }
+        .logout-link { margin-left: 10px; font-size: 10px; color: #ff3333 !important; border: 1px solid #444; padding: 5px 10px; border-radius: 4px; font-weight: bold; }
+        .logout-link:hover { background: rgba(255,255,255,0.1); }
+
+        /* 페이지 헤더 */
+        .page-header { margin-top: 130px; padding: 60px 8% 40px; text-align: center; background: linear-gradient(to bottom, #111, #0a0a0a); border-bottom: 1px solid #222; }
+        .page-title { font-size: 3.5rem; font-weight: 900; color: #ff5e00; letter-spacing: 8px; margin: 0; text-transform: uppercase; text-shadow: 0 0 20px rgba(255,94,0,0.3); }
+        .page-subtitle { color: #888; font-size: 1rem; letter-spacing: 2px; margin-top: 10px; }
+
+        /* 메인 컨테이너 */
+        .tactics-container { max-width: 1300px; margin: 40px auto 80px auto; padding: 0 8%; min-height: 50vh; }
+        
+        /* 컨트롤 바 (카테고리 & 글쓰기) */
+        .tactics-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 20px; }
+        .category-filters { display: flex; gap: 10px; flex-wrap: wrap; }
+        .cat-btn { background: #111; border: 1px solid #333; color: #888; padding: 8px 18px; font-size: 0.85rem; font-weight: 800; border-radius: 20px; transition: 0.3s; text-transform: uppercase; }
+        .cat-btn:hover { border-color: #ff5e00; color: #fff; }
+        .cat-btn.active { background: #ff5e00; color: #fff; border-color: #ff5e00; box-shadow: 0 0 15px rgba(255,94,0,0.3); }
+        
+        .btn-write { background: #ff5e00; color: #fff; border: none; padding: 10px 20px; font-weight: 800; border-radius: 4px; transition: 0.3s; }
+        .btn-write:hover { background: #e65500; box-shadow: 0 0 15px rgba(255,94,0,0.5); }
+
+        /* 전술 카드 그리드 */
+        .tactics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+        .tactic-card { background: #111; border: 1px solid #222; border-radius: 8px; overflow: hidden; transition: 0.3s; display: flex; flex-direction: column; position: relative; }
+        .tactic-card:hover { transform: translateY(-5px); border-color: #ff5e00; box-shadow: 0 10px 30px rgba(255, 94, 0, 0.15); }
+        
+        .card-thumbnail { width: 100%; height: 180px; background: #000; position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        .card-thumbnail img, .card-thumbnail video { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s; }
+        .tactic-card:hover .card-thumbnail img, .tactic-card:hover .card-thumbnail video { opacity: 1; transform: scale(1.05); }
+        
+        .card-tag { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.8); border: 1px solid #ff5e00; color: #ff5e00; font-size: 0.7rem; font-weight: 900; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; z-index: 2; }
+        .play-icon { position: absolute; font-size: 2rem; color: rgba(255,255,255,0.7); z-index: 2; }
+        
+        .card-body { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .card-title { font-size: 1.1rem; font-weight: 800; color: #fff; margin: 0 0 10px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; color: #666; font-size: 0.8rem; margin-top: 15px; border-top: 1px solid #222; padding-top: 10px; }
+        
+        .empty-grid { grid-column: 1 / -1; text-align: center; padding: 80px 0; color: #666; font-weight: bold; background: #111; border-radius: 8px; border: 1px dashed #333; }
+
+        /* 모달 (읽기/쓰기) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-content { background: #111; border: 1px solid #333; border-radius: 8px; width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; padding: 40px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .modal-close { position: absolute; top: 20px; right: 25px; background: none; border: none; color: #888; font-size: 2rem; transition: 0.3s; line-height: 1; }
+        .modal-close:hover { color: #ff5e00; transform: scale(1.1); }
+
+        /* 읽기 모달 */
+        .read-category { color: #ff5e00; font-weight: 900; font-size: 0.85rem; margin-bottom: 5px; text-transform: uppercase; }
+        #read-title { font-size: 2rem; color: #fff; font-weight: 900; margin: 0 0 15px 0; word-break: keep-all; }
+        .read-info { display: flex; gap: 15px; color: #888; font-size: 0.85rem; padding-bottom: 20px; border-bottom: 1px solid #333; margin-bottom: 30px; }
+        #read-media-container { margin-bottom: 20px; text-align: center; background: #000; border-radius: 8px; overflow: hidden; }
+        #read-media-container img, #read-media-container video { max-width: 100%; max-height: 60vh; border-radius: 8px; }
+        #read-body { color: #ddd; line-height: 1.8; white-space: pre-wrap; font-size: 1rem; }
+        .admin-controls { margin-top: 30px; padding-top: 20px; border-top: 1px solid #333; display: none; text-align: right; }
+
+        /* 쓰기 모달 */
+        .write-input { width: 100%; background: #0a0a0a; border: 1px solid #333; color: #fff; padding: 15px; font-family: inherit; font-size: 1rem; margin-bottom: 15px; border-radius: 4px; box-sizing: border-box; }
+        .write-input:focus { outline: none; border-color: #ff5e00; }
+        textarea.write-input { height: 200px; resize: none; }
+        select.write-input { appearance: none; cursor: pointer; color: #ff5e00; font-weight: bold; }
+        
+        .file-upload-wrapper { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; background: #1a1a1a; padding: 10px; border-radius: 4px; border: 1px dashed #444; }
+        .file-upload-wrapper label { background: #333; color: #fff; padding: 8px 15px; border-radius: 4px; font-size: 0.85rem; font-weight: bold; transition: 0.3s; }
+        .file-upload-wrapper label:hover { background: #ff5e00; }
+        #file-name-display { font-size: 0.85rem; color: #888; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 250px; }
+        
+        #upload-progress-container { display: none; margin-bottom: 20px; }
+        .progress-bar-bg { background: #222; height: 8px; border-radius: 4px; overflow: hidden; }
+        #upload-progress-bar { background: #ff5e00; height: 100%; width: 0%; transition: width 0.1s; }
+        #upload-status-text { font-size: 0.75rem; color: #aaa; margin-top: 5px; text-align: right; }
+
+        footer { padding: 40px; text-align: center; color: #444; border-top: 1px solid #222; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+    <div id="lock-overlay">
+        <h2>CLIX MEMBERS ONLY</h2>
+        <div class="auth-container">
+            <p style="color:#aaa; margin-bottom:20px; font-weight:bold;">이 페이지는 로그인이 필요합니다.</p>
+            <button class="auth-btn" onclick="location.href='index.html'">메인으로 이동하여 로그인</button>
+        </div>
+    </div>
+
+    <div class="live-status-bar">
+        <span class="status-tag">LIVE</span> 서버 상태: <span style="color: #4ee29d;">정상</span> | 오늘의 맵: <span style="color: #fff;">에란겔 / 미라마 / 비켄디 / 테이고 / 론도</span>
+    </div>
+
+    <nav>
+        <a href="index.html" class="logo">CLAN CLIX</a>
+        <ul>
+            <li><a href="index.html#about">ABOUT</a></li>
+            <li><a href="index.html#hall-of-fame">HALL OF FAME</a></li>
+            <li><a href="index.html#stream">LIVE</a></li>
+            <li><a href="index.html#discord">DISCORD</a></li>
+            <li><a href="notice.html">NOTICE</a></li>
+            <li><a href="board.html">BOARD</a></li>
+            <li><a href="scrim.html">SCRIM</a></li>
+            <li><a href="tactics.html" style="color:#ff5e00 !important; font-weight:800;">TACTICS</a></li>
+            <li><a href="index.html#members">STATS</a></li>
+            <li><a href="members.html">MEMBERS</a></li>
+            <li id="nav-user-info" style="color:#ff5e00; font-size:10px; margin-left:20px; font-weight: bold;"></li>
+            <li><span class="logout-link" onclick="logout()">LOGOUT</span></li>
+        </ul>
+    </nav>
+
+    <header class="page-header" data-aos="fade-down">
+        <h1 class="page-title">TACTICS BOARD</h1>
+        <p class="page-subtitle">클랜 전술, 맵 브리핑 및 투척물(각폭/연막) 가이드 공유</p>
+    </header>
+
+    <div class="tactics-container" data-aos="fade-up" data-aos-delay="100">
+        <div class="tactics-top">
+            <div class="category-filters" id="category-filters">
+                <button class="cat-btn active" onclick="filterTactics('ALL', this)">ALL</button>
+                <button class="cat-btn" onclick="filterTactics('기본 전술', this)">기본 전술</button>
+                <button class="cat-btn" onclick="filterTactics('에란겔', this)">에란겔</button>
+                <button class="cat-btn" onclick="filterTactics('미라마', this)">미라마</button>
+                <button class="cat-btn" onclick="filterTactics('태이고', this)">태이고</button>
+                <button class="cat-btn" onclick="filterTactics('론도', this)">론도</button>
+                <button class="cat-btn" onclick="filterTactics('기타 맵', this)">기타 맵</button>
+            </div>
+            <button class="btn-write" onclick="openWriteModal()">새 전술 공유하기</button>
+        </div>
+
+        <div class="tactics-grid" id="tactics-grid">
+            <div class="empty-grid">전술 데이터를 불러오는 중입니다...</div>
+        </div>
+    </div>
+
+    <!-- 전술 읽기 모달 -->
+    <div class="modal-overlay" id="read-modal">
+        <div class="modal-content" data-aos="zoom-in" data-aos-duration="300">
+            <button class="modal-close" onclick="closeModal('read-modal')">&times;</button>
+            <div id="read-category" class="read-category">CATEGORY</div>
+            <h2 id="read-title">전술 제목</h2>
+            <div class="read-info">
+                <span id="read-author" style="color:#ccc; font-weight:bold;">작성자: -</span>
+                <span id="read-date">작성일: -</span>
+            </div>
+            
+            <div id="read-media-container"></div>
+            
+            <div id="read-body" style="margin-top:20px;"></div>
+            
+            <div class="admin-controls" id="read-admin-controls">
+                <button class="auth-btn" style="width:auto; background:#ff3333; padding:10px 20px;" onclick="deleteTactic()">삭제하기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 전술 쓰기 모달 -->
+    <div class="modal-overlay" id="write-modal">
+        <div class="modal-content" data-aos="zoom-in" data-aos-duration="300">
+            <button class="modal-close" onclick="closeModal('write-modal')">&times;</button>
+            <h2 style="color:#ff5e00; margin-bottom:20px;">전술 공유하기</h2>
+            
+            <select id="write-category" class="write-input">
+                <option value="기본 전술">기본 전술 (공통 팁)</option>
+                <option value="에란겔">에란겔</option>
+                <option value="미라마">미라마</option>
+                <option value="태이고">태이고</option>
+                <option value="론도">론도</option>
+                <option value="기타 맵">비켄디 / 사녹 등 기타 맵</option>
+            </select>
+
+            <input type="text" id="write-title" class="write-input" placeholder="전술 제목 (예: 에란겔 학교 1층 방어법)">
+            
+            <!-- 첨부파일 UI -->
+            <div class="file-upload-wrapper">
+                <label for="write-file">사진/영상 첨부 (필수)</label>
+                <input type="file" id="write-file" accept="image/*,video/*" style="display:none;" onchange="updateFileName()">
+                <span id="file-name-display">선택된 파일 없음</span>
+                <button type="button" id="btn-cancel-file" onclick="cancelFile()" style="display:none; background:none; border:none; color:#ff3333; font-weight:bold; font-size:12px;">X 취소</button>
+            </div>
+
+            <!-- 업로드 프로그레스 바 -->
+            <div id="upload-progress-container">
+                <div class="progress-bar-bg"><div id="upload-progress-bar"></div></div>
+                <div id="upload-status-text">업로드 준비 중...</div>
+            </div>
+
+            <textarea id="write-content" class="write-input" placeholder="상세한 브리핑 내용을 적어주세요. (위치, 투척물 각도 등)"></textarea>
+            <button id="btn-submit" class="auth-btn" onclick="submitTactic()">등록하기</button>
+        </div>
+    </div>
+
+    <footer>&copy; 2026 CLAN CLIX. ALL RIGHTS RESERVED.</footer>
+
+    <!-- AOS Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        const firebaseConfig = { apiKey: "AIzaSyAFSAu2aynX6YPiJEatWy9IQgWgUuTx8ds", authDomain: "korclix.firebaseapp.com", projectId: "korclix", storageBucket: "korclix.firebasestorage.app", messagingSenderId: "472792477536", appId: "1:472792477536:web:14907e228c343b72fd7805" };
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        let isUserAdmin = false; 
+        let userNick = "";
+        let userId = ""; 
+        let currentReadDoc = null;
+        let allTacticsData = []; 
+        let currentCategory = 'ALL';
+
+        // 1. 인증 및 사용자 정보 로드
+        auth.onAuthStateChanged((user) => {
+            const overlay = document.getElementById('lock-overlay');
+            if (user && user.emailVerified) {
+                overlay.style.display = 'none';
+                userId = user.uid;
+                db.collection("users").doc(user.uid).get().then((doc) => {
+                    if (doc.exists) { 
+                        const data = doc.data(); 
+                        userNick = data.nickname || user.email.split('@')[0]; 
+                        isUserAdmin = data.isAdmin === true; 
+                    } else { 
+                        userNick = user.email.split('@')[0]; 
+                        isUserAdmin = false; 
+                    }
+                    document.getElementById('nav-user-info').innerText = userNick + "님"; 
+                    loadTactics();
+                });
+            } else { overlay.style.display = 'flex'; }
+        });
+
+        // 2. 전술 데이터 불러오기 (배열 저장 후 자바스크립트로 렌더링)
+        function loadTactics() {
+            const grid = document.getElementById('tactics-grid');
+
+            db.collection("tactics").onSnapshot((snapshot) => {
+                if (snapshot.empty) {
+                    grid.innerHTML = '<div class="empty-grid">등록된 전술이 없습니다. 첫 작성자가 되어보세요!</div>';
+                    allTacticsData = [];
+                    return;
+                }
+
+                let tempArray = [];
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const dateObj = data.createdAt ? data.createdAt.toDate() : new Date();
+                    const dateStr = `${dateObj.getFullYear()}.${String(dateObj.getMonth() + 1).padStart(2, '0')}.${String(dateObj.getDate()).padStart(2, '0')}`;
+                    tempArray.push({ id: doc.id, dateStr: dateStr, dateRaw: dateObj, ...data });
+                });
+
+                // 최신순 정렬
+                tempArray.sort((a, b) => b.dateRaw - a.dateRaw);
+                allTacticsData = tempArray;
+
+                // 화면에 그리기
+                renderGrid();
+            }, (error) => {
+                grid.innerHTML = `<div class="empty-grid" style="color:#ff3333;">데이터를 불러오지 못했습니다.<br><span style="font-size:12px;">${error.message}</span></div>`;
+            });
+        }
+
+        // 3. 필터링 및 화면 렌더링
+        function filterTactics(category, btnElement) {
+            currentCategory = category;
+            
+            // 버튼 활성화 스타일 변경
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            renderGrid();
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('tactics-grid');
+            grid.innerHTML = "";
+
+            const filteredData = currentCategory === 'ALL' 
+                ? allTacticsData 
+                : allTacticsData.filter(t => t.category === currentCategory);
+
+            if (filteredData.length === 0) {
+                grid.innerHTML = `<div class="empty-grid">해당 카테고리에 등록된 전술이 없습니다.</div>`;
+                return;
+            }
+
+            filteredData.forEach(data => {
+                // 썸네일 생성 로직
+                let mediaHtml = '';
+                let playIcon = '';
+                if(data.mediaUrl) {
+                    if(data.mediaType.includes('video')) {
+                        // 비디오일 경우 첫 화면을 썸네일로 씀
+                        mediaHtml = `<video src="${data.mediaUrl}#t=0.1" muted preload="metadata"></video>`;
+                        playIcon = `<div class="play-icon">▶</div>`;
+                    } else {
+                        mediaHtml = `<img src="${data.mediaUrl}" alt="전술 썸네일">`;
+                    }
+                } else {
+                    mediaHtml = `<div style="color:#444; font-weight:bold; font-size:0.8rem;">이미지 없음</div>`;
+                }
+
+                const cardHtml = `
+                    <div class="tactic-card" onclick="readTactic('${data.id}')">
+                        <span class="card-tag">${data.category}</span>
+                        <div class="card-thumbnail">
+                            ${playIcon}
+                            ${mediaHtml}
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title">${data.title}</h3>
+                            <div class="card-footer">
+                                <span>${data.author}</span>
+                                <span>${data.dateStr}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.insertAdjacentHTML('beforeend', cardHtml);
+            });
+        }
+
+        // 4. 모달 및 파일 관련 함수
+        function closeModal(modalId) { 
+            document.getElementById(modalId).style.display = 'none'; 
+            if(modalId === 'read-modal') {
+                document.getElementById('read-media-container').innerHTML = ""; // 영상 소리 정지
+            }
+        }
+
+        function updateFileName() {
+            const fileInput = document.getElementById('write-file');
+            const fileNameDisplay = document.getElementById('file-name-display');
+            const cancelBtn = document.getElementById('btn-cancel-file');
+            
+            if(fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                if(file.size > 50 * 1024 * 1024) { 
+                    alert("파일 크기는 50MB를 초과할 수 없습니다.");
+                    cancelFile();
+                    return;
+                }
+                fileNameDisplay.innerText = file.name;
+                fileNameDisplay.style.color = "#ff5e00";
+                cancelBtn.style.display = "inline-block";
+            } else { cancelFile(); }
+        }
+
+        function cancelFile() {
+            document.getElementById('write-file').value = "";
+            document.getElementById('file-name-display').innerText = "선택된 파일 없음";
+            document.getElementById('file-name-display').style.color = "#aaa";
+            document.getElementById('btn-cancel-file').style.display = "none";
+        }
+
+        function openWriteModal() {
+            document.getElementById('write-title').value = '';
+            document.getElementById('write-content').value = '';
+            document.getElementById('write-category').selectedIndex = 0;
+            cancelFile();
+            document.getElementById('upload-progress-container').style.display = 'none';
+            document.getElementById('write-modal').style.display = 'flex';
+        }
+
+        // 5. 전술 등록 로직 (Storage 업로드 포함)
+        async function submitTactic() {
+            const category = document.getElementById('write-category').value;
+            const title = document.getElementById('write-title').value.trim();
+            const content = document.getElementById('write-content').value.trim();
+            const fileInput = document.getElementById('write-file');
+            const file = fileInput.files[0];
+            const btnSubmit = document.getElementById('btn-submit');
+
+            if (!title || !content) return alert("제목과 내용을 모두 입력해주세요.");
+            if (!file) return alert("이해가 쉽도록 반드시 사진이나 영상을 1개 이상 첨부해주세요.");
+
+            btnSubmit.disabled = true;
+            btnSubmit.innerText = "처리 중...";
+
+            let mediaUrl = null;
+            let mediaType = null;
+            let storagePath = null;
+
+            try {
+                document.getElementById('upload-progress-container').style.display = 'block';
+                const ext = file.name.split('.').pop();
+                storagePath = `tactics_media/${Date.now()}_${userId}.${ext}`;
+                const storageRef = storage.ref().child(storagePath);
+                
+                const uploadTask = storageRef.put(file);
+
+                await new Promise((resolve, reject) => {
+                    uploadTask.on('state_changed', 
+                        (snapshot) => {
+                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            document.getElementById('upload-progress-bar').style.width = progress + '%';
+                            document.getElementById('upload-status-text').innerText = `업로드 중... ${Math.round(progress)}%`;
+                        }, 
+                        (error) => { reject(error); }, 
+                        async () => {
+                            mediaUrl = await uploadTask.snapshot.ref.getDownloadURL();
+                            mediaType = file.type;
+                            resolve();
+                        }
+                    );
+                });
+
+                // DB 저장
+                await db.collection("tactics").add({
+                    category: category,
+                    title: title,
+                    content: content,
+                    author: userNick,
+                    authorUid: userId,
+                    mediaUrl: mediaUrl,
+                    mediaType: mediaType,
+                    storagePath: storagePath,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                alert("전술이 성공적으로 등록되었습니다!");
+                closeModal('write-modal');
+
+            } catch (error) {
+                alert("등록 실패: " + error.message);
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.innerText = "등록하기";
+                document.getElementById('upload-progress-container').style.display = 'none';
+            }
+        }
+
+        // 6. 전술 읽기 및 삭제
+        function readTactic(docId) {
+            const docData = allTacticsData.find(t => t.id === docId);
+            if(!docData) return;
+            currentReadDoc = docData;
+
+            document.getElementById('read-category').innerText = `[ ${docData.category} ]`;
+            document.getElementById('read-title').innerText = docData.title;
+            document.getElementById('read-author').innerText = "작성자: " + docData.author;
+            document.getElementById('read-date').innerText = "작성일: " + docData.dateStr;
+            document.getElementById('read-body').innerText = docData.content;
+            
+            const mediaContainer = document.getElementById('read-media-container');
+            mediaContainer.innerHTML = "";
+            if(docData.mediaUrl) {
+                if(docData.mediaType.includes('image')) {
+                    mediaContainer.innerHTML = `<img src="${docData.mediaUrl}" alt="전술 첨부 미디어">`;
+                } else if(docData.mediaType.includes('video')) {
+                    mediaContainer.innerHTML = `<video src="${docData.mediaUrl}" controls autoplay loop></video>`;
+                }
+            }
+
+            const adminControls = document.getElementById('read-admin-controls');
+            adminControls.style.display = (isUserAdmin || userId === docData.authorUid) ? 'block' : 'none';
+
+            document.getElementById('read-modal').style.display = 'flex';
+        }
+
+        async function deleteTactic() {
+            if(!currentReadDoc) return;
+            if(!confirm("이 전술 데이터를 완전히 삭제하시겠습니까?\n(첨부된 미디어도 함께 삭제됩니다.)")) return;
+
+            const docId = currentReadDoc.id;
+            const storagePath = currentReadDoc.storagePath;
+
+            try {
+                if(storagePath) {
+                    const storageRef = storage.ref().child(storagePath);
+                    await storageRef.delete().catch(err => console.log("파일 삭제 통과", err));
+                }
+                await db.collection("tactics").doc(docId).delete();
+                alert("삭제되었습니다.");
+                closeModal('read-modal');
+            } catch (error) {
+                alert("삭제 실패: " + error.message);
+            }
+        }
+
+        function logout() {
+            if(confirm("로그아웃 하시겠습니까?")) { auth.signOut().then(() => { location.href = 'index.html'; }); }
+        }
+    </script>
+</body>
+</html>
